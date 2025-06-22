@@ -38,13 +38,16 @@ def terrainproject(plx,ply,scale):
         for currx in range(world_width):
             tileposx=((0-plx)+(currx*tilesize))
             tileposy=((0-ply)+(curry*tilesize))
-            projector(tilestringcalculate(currx,curry,string),tileposx,tileposy,scale)
+            tilestring = tilestringcalculate(currx,curry,string)
+            if tilestring in textures_blocks:
+                projector(tilestring,tileposx,tileposy,scale)
+            else:
+                projector("default",tileposx,tileposy,scale)
 
 def tilestringcalculate(currx,curry,string):
     currtile=((world_width*(curry+1))+currx)
     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
-    tilestring=""
-    tilestring+=string[((currtile*5)+1)]
+    tilestring=string[((currtile*5)+1)]
     tilestring+=string[((currtile*5)+3)]
     tilestring+=string[((currtile*5)+4)]
     for currneighbour in indices:

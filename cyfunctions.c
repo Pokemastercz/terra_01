@@ -1909,6 +1909,12 @@ static CYTHON_INLINE PyObject* __Pyx_PyLong_SubtractCObj(PyObject *op1, PyObject
     (inplace ? PyNumber_InPlaceSubtract(op1, op2) : PyNumber_Subtract(op1, op2))
 #endif
 
+/* PySequenceContains.proto */
+static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* seq, int eq) {
+    int result = PySequence_Contains(seq, item);
+    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
+}
+
 /* PyLongBinop.proto */
 #if !CYTHON_COMPILING_IN_PYPY
 static CYTHON_INLINE PyObject* __Pyx_PyLong_AddObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check);
@@ -2247,10 +2253,9 @@ int __pyx_module_is_main_cyfunctions = 0;
 /* #### Code section: global_var ### */
 static PyObject *__pyx_builtin_range;
 /* #### Code section: string_decls ### */
-static const char __pyx_k_[] = "";
+static const char __pyx_k_[] = "?";
 static const char __pyx_k_a[] = "a";
 static const char __pyx_k_b[] = "b";
-static const char __pyx_k__2[] = "?";
 static const char __pyx_k_os[] = "os";
 static const char __pyx_k_wh[] = "wh";
 static const char __pyx_k_ww[] = "ww";
@@ -2287,6 +2292,7 @@ static const char __pyx_k_folder[] = "folder";
 static const char __pyx_k_module[] = "__module__";
 static const char __pyx_k_pygame[] = "pygame";
 static const char __pyx_k_string[] = "string";
+static const char __pyx_k_default[] = "default";
 static const char __pyx_k_display[] = "display";
 static const char __pyx_k_indices[] = "indices";
 static const char __pyx_k_listdir[] = "listdir";
@@ -2331,8 +2337,8 @@ static const char __pyx_k_folder_texture_blocks[] = "folder_texture_blocks";
 static const char __pyx_k_resources_textures_blocks[] = "resources/textures/blocks";
 static const char __pyx_k_saves_world_0_strings_string[] = "saves.world_0.strings.string";
 static const char __pyx_k_Bhaq_89AWCxy_2U_q_2U_1IQa_fF_q[] = "\200\001\330\004\010\210\014\220B\220h\230a\230q\330\010\013\2108\2209\230A\230W\240C\240x\250y\270\001\270\021\330\014\033\2302\230U\240%\240q\250\010\260\001\330\014\033\2302\230U\240)\2501\250I\260Q\260a\330\014\026\220f\230F\240%\240q\250\r\260^\3001\330\014\033\2301\320\034,\250F\260*\270F\300!\300:\310Q\310h\320VW\320W_\320_g\320gh\320hi";
-static const char __pyx_k_E_Qa_Cxq_5_Qe81BauHTUUaabbc_q_c[] = "\200\001\330\004\017\210{\230\"\230E\240\021\240#\240Q\240a\330\004\014\210C\210x\220q\230\002\230!\2305\240\010\250\001\250\034\260Q\260e\2708\3001\300B\300a\300u\310H\320TU\320Ua\320ab\320bc\330\004\017\210q\330\004\020\220\006\220c\230\030\240\021\240\"\240A\240Q\330\004\020\220\006\220c\230\030\240\021\240\"\240A\240Q\330\004\020\220\006\220c\230\030\240\021\240\"\240A\240Q\330\004\010\320\010\031\230\021\330\010\013\2106\220\021\220-\230q\240\002\240\"\240F\250\"\250H\260A\260R\260q\270\001\330\014\030\230\001\340\014\030\230\001\330\004\013\2101";
-static const char __pyx_k_Zq_aq_IU_1_q_RuAQ_q_RuAQ_Q_hiyP[] = "\200\001\330\004\r\210Z\220q\330\004\010\210\t\220\025\220a\220q\330\010\014\210I\220U\230!\2301\330\014\027\220q\230\001\230\024\230R\230u\240A\240Q\330\014\027\220q\230\001\230\024\230R\230u\240A\240Q\330\014\025\220Q\320\026)\250\021\250&\260\006\260h\270i\300y\320PQ";
+static const char __pyx_k_E_Qa_Cxq_5_Qe81BauHTUUaabbc_vS[] = "\200\001\330\004\017\210{\230\"\230E\240\021\240#\240Q\240a\330\004\014\210C\210x\220q\230\002\230!\2305\240\010\250\001\250\034\260Q\260e\2708\3001\300B\300a\300u\310H\320TU\320Ua\320ab\320bc\330\004\017\210v\220S\230\010\240\001\240\022\2401\240A\330\004\020\220\006\220c\230\030\240\021\240\"\240A\240Q\330\004\020\220\006\220c\230\030\240\021\240\"\240A\240Q\330\004\010\320\010\031\230\021\330\010\013\2106\220\021\220-\230q\240\002\240\"\240F\250\"\250H\260A\260R\260q\270\001\330\014\030\230\001\340\014\030\230\001\330\004\013\2101";
+static const char __pyx_k_Zq_aq_IU_1_q_RuAQ_q_RuAQ_AV6_Q[] = "\200\001\330\004\r\210Z\220q\330\004\010\210\t\220\025\220a\220q\330\010\014\210I\220U\230!\2301\330\014\027\220q\230\001\230\024\230R\230u\240A\240Q\330\014\027\220q\230\001\230\024\230R\230u\240A\240Q\330\014\031\320\031,\250A\250V\2606\270\021\330\014\017\210{\230#\230Q\330\020\031\230\021\230+\240Y\250i\260q\340\020\031\230\021\230*\240I\250Y\260a";
 static const char __pyx_k_saves_world_0_strings_string_py[] = "saves/world_0/strings/string.py";
 /* #### Code section: decls ### */
 static PyObject *__pyx_pf_11cyfunctions_load_textures(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_folder, PyObject *__pyx_v_scale); /* proto */
@@ -2429,20 +2435,20 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #endif
 /* #### Code section: constant_name_defines ### */
 #define __pyx_kp_u_ __pyx_string_tab[0]
-#define __pyx_kp_u__2 __pyx_string_tab[1]
-#define __pyx_n_u_a __pyx_string_tab[2]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[3]
-#define __pyx_n_u_b __pyx_string_tab[4]
-#define __pyx_n_u_blit __pyx_string_tab[5]
-#define __pyx_n_u_class_getitem __pyx_string_tab[6]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[7]
-#define __pyx_n_u_convert_alpha __pyx_string_tab[8]
-#define __pyx_n_u_currneighbour __pyx_string_tab[9]
-#define __pyx_n_u_currtile __pyx_string_tab[10]
-#define __pyx_n_u_currx __pyx_string_tab[11]
-#define __pyx_n_u_curry __pyx_string_tab[12]
-#define __pyx_n_u_cyfunctions __pyx_string_tab[13]
-#define __pyx_kp_u_cyfunctions_pyx __pyx_string_tab[14]
+#define __pyx_n_u_a __pyx_string_tab[1]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[2]
+#define __pyx_n_u_b __pyx_string_tab[3]
+#define __pyx_n_u_blit __pyx_string_tab[4]
+#define __pyx_n_u_class_getitem __pyx_string_tab[5]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[6]
+#define __pyx_n_u_convert_alpha __pyx_string_tab[7]
+#define __pyx_n_u_currneighbour __pyx_string_tab[8]
+#define __pyx_n_u_currtile __pyx_string_tab[9]
+#define __pyx_n_u_currx __pyx_string_tab[10]
+#define __pyx_n_u_curry __pyx_string_tab[11]
+#define __pyx_n_u_cyfunctions __pyx_string_tab[12]
+#define __pyx_kp_u_cyfunctions_pyx __pyx_string_tab[13]
+#define __pyx_n_u_default __pyx_string_tab[14]
 #define __pyx_n_u_display __pyx_string_tab[15]
 #define __pyx_n_u_endswith __pyx_string_tab[16]
 #define __pyx_n_u_filename __pyx_string_tab[17]
@@ -3390,6 +3396,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
   PyObject *__pyx_v_currx = NULL;
   PyObject *__pyx_v_tileposx = NULL;
   PyObject *__pyx_v_tileposy = NULL;
+  PyObject *__pyx_v_tilestring = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3402,9 +3409,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
   PyObject *__pyx_t_8 = NULL;
   Py_ssize_t __pyx_t_9;
   PyObject *(*__pyx_t_10)(PyObject *);
-  PyObject *__pyx_t_11 = NULL;
-  PyObject *__pyx_t_12 = NULL;
-  PyObject *__pyx_t_13 = NULL;
+  int __pyx_t_11;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3580,7 +3585,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
  *         for currx in range(world_width):
  *             tileposx=((0-plx)+(currx*tilesize))             # <<<<<<<<<<<<<<
  *             tileposy=((0-ply)+(curry*tilesize))
- *             projector(tilestringcalculate(currx,curry,string),tileposx,tileposy,scale)
+ *             tilestring = tilestringcalculate(currx,curry,string)
 */
       __pyx_t_2 = __Pyx_PyLong_SubtractCObj(__pyx_mstate_global->__pyx_int_0, __pyx_v_plx, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
@@ -3600,8 +3605,8 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
  *         for currx in range(world_width):
  *             tileposx=((0-plx)+(currx*tilesize))
  *             tileposy=((0-ply)+(curry*tilesize))             # <<<<<<<<<<<<<<
- *             projector(tilestringcalculate(currx,curry,string),tileposx,tileposy,scale)
- * 
+ *             tilestring = tilestringcalculate(currx,curry,string)
+ *             if tilestring in textures_blocks:
 */
       __pyx_t_8 = __Pyx_PyLong_SubtractCObj(__pyx_mstate_global->__pyx_int_0, __pyx_v_ply, 0, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 40, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
@@ -3620,36 +3625,13 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
       /* "cyfunctions.pyx":41
  *             tileposx=((0-plx)+(currx*tilesize))
  *             tileposy=((0-ply)+(curry*tilesize))
- *             projector(tilestringcalculate(currx,curry,string),tileposx,tileposy,scale)             # <<<<<<<<<<<<<<
- * 
- * def tilestringcalculate(currx,curry,string):
+ *             tilestring = tilestringcalculate(currx,curry,string)             # <<<<<<<<<<<<<<
+ *             if tilestring in textures_blocks:
+ *                 projector(tilestring,tileposx,tileposy,scale)
 */
       __pyx_t_2 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_projector); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 41, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_tilestringcalculate); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 41, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_12 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_tilestringcalculate); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 41, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_5 = 1;
-      #if CYTHON_UNPACK_METHODS
-      if (unlikely(PyMethod_Check(__pyx_t_13))) {
-        __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_13);
-        assert(__pyx_t_12);
-        PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_12);
-        __Pyx_INCREF(__pyx__function);
-        __Pyx_DECREF_SET(__pyx_t_13, __pyx__function);
-        __pyx_t_5 = 0;
-      }
-      #endif
-      {
-        PyObject *__pyx_callargs[4] = {__pyx_t_12, __pyx_v_currx, __pyx_v_curry, __pyx_v_string};
-        __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_13, __pyx_callargs+__pyx_t_5, (4-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 41, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_11);
-      }
       __pyx_t_5 = 1;
       #if CYTHON_UNPACK_METHODS
       if (unlikely(PyMethod_Check(__pyx_t_8))) {
@@ -3663,15 +3645,105 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
       }
       #endif
       {
-        PyObject *__pyx_callargs[5] = {__pyx_t_2, __pyx_t_11, __pyx_v_tileposx, __pyx_v_tileposy, __pyx_v_scale};
-        __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_5, (5-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        PyObject *__pyx_callargs[4] = {__pyx_t_2, __pyx_v_currx, __pyx_v_curry, __pyx_v_string};
+        __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_5, (4-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
       }
+      __Pyx_XDECREF_SET(__pyx_v_tilestring, __pyx_t_4);
+      __pyx_t_4 = 0;
+
+      /* "cyfunctions.pyx":42
+ *             tileposy=((0-ply)+(curry*tilesize))
+ *             tilestring = tilestringcalculate(currx,curry,string)
+ *             if tilestring in textures_blocks:             # <<<<<<<<<<<<<<
+ *                 projector(tilestring,tileposx,tileposy,scale)
+ *             else:
+*/
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_textures_blocks); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_11 = (__Pyx_PySequence_ContainsTF(__pyx_v_tilestring, __pyx_t_4, Py_EQ)); if (unlikely((__pyx_t_11 < 0))) __PYX_ERR(0, 42, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      if (__pyx_t_11) {
+
+        /* "cyfunctions.pyx":43
+ *             tilestring = tilestringcalculate(currx,curry,string)
+ *             if tilestring in textures_blocks:
+ *                 projector(tilestring,tileposx,tileposy,scale)             # <<<<<<<<<<<<<<
+ *             else:
+ *                 projector("default",tileposx,tileposy,scale)
+*/
+        __pyx_t_8 = NULL;
+        __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_projector); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_5 = 1;
+        #if CYTHON_UNPACK_METHODS
+        if (unlikely(PyMethod_Check(__pyx_t_2))) {
+          __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
+          assert(__pyx_t_8);
+          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_2);
+          __Pyx_INCREF(__pyx_t_8);
+          __Pyx_INCREF(__pyx__function);
+          __Pyx_DECREF_SET(__pyx_t_2, __pyx__function);
+          __pyx_t_5 = 0;
+        }
+        #endif
+        {
+          PyObject *__pyx_callargs[5] = {__pyx_t_8, __pyx_v_tilestring, __pyx_v_tileposx, __pyx_v_tileposy, __pyx_v_scale};
+          __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+__pyx_t_5, (5-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+        }
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+        /* "cyfunctions.pyx":42
+ *             tileposy=((0-ply)+(curry*tilesize))
+ *             tilestring = tilestringcalculate(currx,curry,string)
+ *             if tilestring in textures_blocks:             # <<<<<<<<<<<<<<
+ *                 projector(tilestring,tileposx,tileposy,scale)
+ *             else:
+*/
+        goto __pyx_L7;
+      }
+
+      /* "cyfunctions.pyx":45
+ *                 projector(tilestring,tileposx,tileposy,scale)
+ *             else:
+ *                 projector("default",tileposx,tileposy,scale)             # <<<<<<<<<<<<<<
+ * 
+ * def tilestringcalculate(currx,curry,string):
+*/
+      /*else*/ {
+        __pyx_t_2 = NULL;
+        __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_projector); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 45, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __pyx_t_5 = 1;
+        #if CYTHON_UNPACK_METHODS
+        if (unlikely(PyMethod_Check(__pyx_t_8))) {
+          __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_8);
+          assert(__pyx_t_2);
+          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_8);
+          __Pyx_INCREF(__pyx_t_2);
+          __Pyx_INCREF(__pyx__function);
+          __Pyx_DECREF_SET(__pyx_t_8, __pyx__function);
+          __pyx_t_5 = 0;
+        }
+        #endif
+        {
+          PyObject *__pyx_callargs[5] = {__pyx_t_2, __pyx_mstate_global->__pyx_n_u_default, __pyx_v_tileposx, __pyx_v_tileposy, __pyx_v_scale};
+          __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_5, (5-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+        }
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      }
+      __pyx_L7:;
 
       /* "cyfunctions.pyx":38
  *     string = stringfile.string
@@ -3710,9 +3782,6 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_12);
-  __Pyx_XDECREF(__pyx_t_13);
   __Pyx_AddTraceback("cyfunctions.terrainproject", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -3721,13 +3790,14 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
   __Pyx_XDECREF(__pyx_v_currx);
   __Pyx_XDECREF(__pyx_v_tileposx);
   __Pyx_XDECREF(__pyx_v_tileposy);
+  __Pyx_XDECREF(__pyx_v_tilestring);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "cyfunctions.pyx":43
- *             projector(tilestringcalculate(currx,curry,string),tileposx,tileposy,scale)
+/* "cyfunctions.pyx":47
+ *                 projector("default",tileposx,tileposy,scale)
  * 
  * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
@@ -3775,38 +3845,38 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_currx,&__pyx_mstate_global->__pyx_n_u_curry,&__pyx_mstate_global->__pyx_n_u_string,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 43, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 47, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 43, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 47, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 43, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 47, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 43, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 47, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "tilestringcalculate", 0) < 0) __PYX_ERR(0, 43, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "tilestringcalculate", 0) < 0) __PYX_ERR(0, 47, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 3; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("tilestringcalculate", 1, 3, 3, i); __PYX_ERR(0, 43, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("tilestringcalculate", 1, 3, 3, i); __PYX_ERR(0, 47, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 43, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 47, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 43, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 47, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 43, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 47, __pyx_L3_error)
     }
     __pyx_v_currx = values[0];
     __pyx_v_curry = values[1];
@@ -3814,7 +3884,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("tilestringcalculate", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 43, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("tilestringcalculate", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 47, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3854,70 +3924,70 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("tilestringcalculate", 0);
 
-  /* "cyfunctions.pyx":44
+  /* "cyfunctions.pyx":48
  * 
  * def tilestringcalculate(currx,curry,string):
  *     currtile=((world_width*(curry+1))+currx)             # <<<<<<<<<<<<<<
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
- *     tilestring=""
+ *     tilestring=string[((currtile*5)+1)]
 */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_world_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_world_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyLong_AddObjC(__pyx_v_curry, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_AddObjC(__pyx_v_curry, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Add(__pyx_t_3, __pyx_v_currx); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Add(__pyx_t_3, __pyx_v_currx); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_currtile = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cyfunctions.pyx":45
+  /* "cyfunctions.pyx":49
  * def tilestringcalculate(currx,curry,string):
  *     currtile=((world_width*(curry+1))+currx)
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]             # <<<<<<<<<<<<<<
- *     tilestring=""
- *     tilestring+=string[((currtile*5)+1)]
+ *     tilestring=string[((currtile*5)+1)]
+ *     tilestring+=string[((currtile*5)+3)]
 */
-  __pyx_t_2 = __Pyx_PyLong_SubtractObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_SubtractObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyLong_MultiplyObjC(__pyx_t_2, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_MultiplyObjC(__pyx_t_2, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_world_width); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_world_width); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Subtract(__pyx_v_currtile, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_v_currtile, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyLong_MultiplyObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_MultiplyObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyLong_MultiplyObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyLong_MultiplyObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_world_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_world_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = PyNumber_Add(__pyx_v_currtile, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Add(__pyx_v_currtile, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyLong_MultiplyObjC(__pyx_t_5, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_MultiplyObjC(__pyx_t_5, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyList_New(4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_5 = PyList_New(4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 49, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 49, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 2, __pyx_t_4) != (0)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 2, __pyx_t_4) != (0)) __PYX_ERR(0, 49, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 3, __pyx_t_1) != (0)) __PYX_ERR(0, 45, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 3, __pyx_t_1) != (0)) __PYX_ERR(0, 49, __pyx_L1_error);
   __pyx_t_3 = 0;
   __pyx_t_2 = 0;
   __pyx_t_4 = 0;
@@ -3925,143 +3995,130 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
   __pyx_v_indices = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "cyfunctions.pyx":46
+  /* "cyfunctions.pyx":50
  *     currtile=((world_width*(curry+1))+currx)
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
- *     tilestring=""             # <<<<<<<<<<<<<<
- *     tilestring+=string[((currtile*5)+1)]
- *     tilestring+=string[((currtile*5)+3)]
-*/
-  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
-  __pyx_v_tilestring = __pyx_mstate_global->__pyx_kp_u_;
-
-  /* "cyfunctions.pyx":47
- *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
- *     tilestring=""
- *     tilestring+=string[((currtile*5)+1)]             # <<<<<<<<<<<<<<
+ *     tilestring=string[((currtile*5)+1)]             # <<<<<<<<<<<<<<
  *     tilestring+=string[((currtile*5)+3)]
  *     tilestring+=string[((currtile*5)+4)]
 */
-  __pyx_t_5 = __Pyx_PyLong_MultiplyObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_MultiplyObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_t_5, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_t_5, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_v_tilestring = __pyx_t_5;
+  __pyx_t_5 = 0;
+
+  /* "cyfunctions.pyx":51
+ *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
+ *     tilestring=string[((currtile*5)+1)]
+ *     tilestring+=string[((currtile*5)+3)]             # <<<<<<<<<<<<<<
+ *     tilestring+=string[((currtile*5)+4)]
+ *     for currneighbour in indices:
+*/
+  __pyx_t_5 = __Pyx_PyLong_MultiplyObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_t_5, __pyx_mstate_global->__pyx_int_3, 3, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF_SET(__pyx_v_tilestring, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cyfunctions.pyx":48
- *     tilestring=""
- *     tilestring+=string[((currtile*5)+1)]
- *     tilestring+=string[((currtile*5)+3)]             # <<<<<<<<<<<<<<
- *     tilestring+=string[((currtile*5)+4)]
- *     for currneighbour in indices:
-*/
-  __pyx_t_1 = __Pyx_PyLong_MultiplyObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyLong_AddObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_3, 3, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 48, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF_SET(__pyx_v_tilestring, __pyx_t_5);
-  __pyx_t_5 = 0;
-
-  /* "cyfunctions.pyx":49
- *     tilestring+=string[((currtile*5)+1)]
+  /* "cyfunctions.pyx":52
+ *     tilestring=string[((currtile*5)+1)]
  *     tilestring+=string[((currtile*5)+3)]
  *     tilestring+=string[((currtile*5)+4)]             # <<<<<<<<<<<<<<
  *     for currneighbour in indices:
  *         if string[currneighbour+3]==string[(currtile*5)+3]:
 */
-  __pyx_t_5 = __Pyx_PyLong_MultiplyObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 49, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_t_5, __pyx_mstate_global->__pyx_int_4, 4, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_MultiplyObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyLong_AddObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_4, 4, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF_SET(__pyx_v_tilestring, __pyx_t_1);
-  __pyx_t_1 = 0;
+  __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 52, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF_SET(__pyx_v_tilestring, __pyx_t_5);
+  __pyx_t_5 = 0;
 
-  /* "cyfunctions.pyx":50
+  /* "cyfunctions.pyx":53
  *     tilestring+=string[((currtile*5)+3)]
  *     tilestring+=string[((currtile*5)+4)]
  *     for currneighbour in indices:             # <<<<<<<<<<<<<<
  *         if string[currneighbour+3]==string[(currtile*5)+3]:
  *             tilestring+="a"
 */
-  __pyx_t_1 = __pyx_v_indices; __Pyx_INCREF(__pyx_t_1);
+  __pyx_t_5 = __pyx_v_indices; __Pyx_INCREF(__pyx_t_5);
   __pyx_t_6 = 0;
   for (;;) {
     {
-      Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
+      Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_5);
       #if !CYTHON_ASSUME_SAFE_SIZE
-      if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 50, __pyx_L1_error)
+      if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 53, __pyx_L1_error)
       #endif
       if (__pyx_t_6 >= __pyx_temp) break;
     }
-    __pyx_t_5 = __Pyx_PyList_GetItemRef(__pyx_t_1, __pyx_t_6);
+    __pyx_t_1 = __Pyx_PyList_GetItemRef(__pyx_t_5, __pyx_t_6);
     ++__pyx_t_6;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_XDECREF_SET(__pyx_v_currneighbour, __pyx_t_5);
-    __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_XDECREF_SET(__pyx_v_currneighbour, __pyx_t_1);
+    __pyx_t_1 = 0;
 
-    /* "cyfunctions.pyx":51
+    /* "cyfunctions.pyx":54
  *     tilestring+=string[((currtile*5)+4)]
  *     for currneighbour in indices:
  *         if string[currneighbour+3]==string[(currtile*5)+3]:             # <<<<<<<<<<<<<<
  *             tilestring+="a"
  *         else:
 */
-    __pyx_t_5 = __Pyx_PyLong_AddObjC(__pyx_v_currneighbour, __pyx_mstate_global->__pyx_int_3, 3, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 51, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_v_currneighbour, __pyx_mstate_global->__pyx_int_3, 3, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyLong_MultiplyObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_2 = __Pyx_PyLong_AddObjC(__pyx_t_5, __pyx_mstate_global->__pyx_int_3, 3, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyLong_MultiplyObjC(__pyx_v_currtile, __pyx_mstate_global->__pyx_int_5, 5, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = __Pyx_PyLong_AddObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_3, 3, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_string, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyObject_RichCompare(__pyx_t_4, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
+    __pyx_t_2 = PyObject_RichCompare(__pyx_t_4, __pyx_t_1, Py_EQ); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 51, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (__pyx_t_7) {
 
-      /* "cyfunctions.pyx":52
+      /* "cyfunctions.pyx":55
  *     for currneighbour in indices:
  *         if string[currneighbour+3]==string[(currtile*5)+3]:
  *             tilestring+="a"             # <<<<<<<<<<<<<<
  *         else:
  *             tilestring+="b"
 */
-      __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_mstate_global->__pyx_n_u_a); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 52, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_mstate_global->__pyx_n_u_a); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF_SET(__pyx_v_tilestring, __pyx_t_2);
       __pyx_t_2 = 0;
 
-      /* "cyfunctions.pyx":51
+      /* "cyfunctions.pyx":54
  *     tilestring+=string[((currtile*5)+4)]
  *     for currneighbour in indices:
  *         if string[currneighbour+3]==string[(currtile*5)+3]:             # <<<<<<<<<<<<<<
@@ -4071,21 +4128,21 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
       goto __pyx_L5;
     }
 
-    /* "cyfunctions.pyx":54
+    /* "cyfunctions.pyx":57
  *             tilestring+="a"
  *         else:
  *             tilestring+="b"             # <<<<<<<<<<<<<<
  *     return(tilestring)
 */
     /*else*/ {
-      __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_mstate_global->__pyx_n_u_b); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_tilestring, __pyx_mstate_global->__pyx_n_u_b); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF_SET(__pyx_v_tilestring, __pyx_t_2);
       __pyx_t_2 = 0;
     }
     __pyx_L5:;
 
-    /* "cyfunctions.pyx":50
+    /* "cyfunctions.pyx":53
  *     tilestring+=string[((currtile*5)+3)]
  *     tilestring+=string[((currtile*5)+4)]
  *     for currneighbour in indices:             # <<<<<<<<<<<<<<
@@ -4093,9 +4150,9 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
  *             tilestring+="a"
 */
   }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "cyfunctions.pyx":55
+  /* "cyfunctions.pyx":58
  *         else:
  *             tilestring+="b"
  *     return(tilestring)             # <<<<<<<<<<<<<<
@@ -4105,8 +4162,8 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
   __pyx_r = __pyx_v_tilestring;
   goto __pyx_L0;
 
-  /* "cyfunctions.pyx":43
- *             projector(tilestringcalculate(currx,curry,string),tileposx,tileposy,scale)
+  /* "cyfunctions.pyx":47
+ *                 projector("default",tileposx,tileposy,scale)
  * 
  * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
@@ -4701,16 +4758,16 @@ __Pyx_RefNannySetupContext("PyInit_cyfunctions", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_terrainproject, __pyx_t_3) < 0) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "cyfunctions.pyx":43
- *             projector(tilestringcalculate(currx,curry,string),tileposx,tileposy,scale)
+  /* "cyfunctions.pyx":47
+ *                 projector("default",tileposx,tileposy,scale)
  * 
  * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
 */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_7tilestringcalculate, 0, __pyx_mstate_global->__pyx_n_u_tilestringcalculate, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_7tilestringcalculate, 0, __pyx_mstate_global->__pyx_n_u_tilestringcalculate, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_tilestringcalculate, __pyx_t_3) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_tilestringcalculate, __pyx_t_3) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "cyfunctions.pyx":1
@@ -4787,7 +4844,6 @@ typedef struct {
 static const char * const __pyx_string_tab_encodings[] = { 0 };
 static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_, sizeof(__pyx_k_), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_ */
-  {__pyx_k__2, sizeof(__pyx_k__2), 0, 1, 0}, /* PyObject cname: __pyx_kp_u__2 */
   {__pyx_k_a, sizeof(__pyx_k_a), 0, 1, 1}, /* PyObject cname: __pyx_n_u_a */
   {__pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 1, 1}, /* PyObject cname: __pyx_n_u_asyncio_coroutines */
   {__pyx_k_b, sizeof(__pyx_k_b), 0, 1, 1}, /* PyObject cname: __pyx_n_u_b */
@@ -4801,6 +4857,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_curry, sizeof(__pyx_k_curry), 0, 1, 1}, /* PyObject cname: __pyx_n_u_curry */
   {__pyx_k_cyfunctions, sizeof(__pyx_k_cyfunctions), 0, 1, 1}, /* PyObject cname: __pyx_n_u_cyfunctions */
   {__pyx_k_cyfunctions_pyx, sizeof(__pyx_k_cyfunctions_pyx), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_cyfunctions_pyx */
+  {__pyx_k_default, sizeof(__pyx_k_default), 0, 1, 1}, /* PyObject cname: __pyx_n_u_default */
   {__pyx_k_display, sizeof(__pyx_k_display), 0, 1, 1}, /* PyObject cname: __pyx_n_u_display */
   {__pyx_k_endswith, sizeof(__pyx_k_endswith), 0, 1, 1}, /* PyObject cname: __pyx_n_u_endswith */
   {__pyx_k_filename, sizeof(__pyx_k_filename), 0, 1, 1}, /* PyObject cname: __pyx_n_u_filename */
@@ -4963,14 +5020,14 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cyfunctions_pyx, __pyx_mstate->__pyx_n_u_projector, __pyx_k_Bar_4q_Bar_4q_uA_AZvQ, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 8, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 35, 88};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_plx, __pyx_mstate->__pyx_n_u_ply, __pyx_mstate->__pyx_n_u_scale, __pyx_mstate->__pyx_n_u_string, __pyx_mstate->__pyx_n_u_curry, __pyx_mstate->__pyx_n_u_currx, __pyx_mstate->__pyx_n_u_tileposx, __pyx_mstate->__pyx_n_u_tileposy};
-    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cyfunctions_pyx, __pyx_mstate->__pyx_n_u_terrainproject, __pyx_k_Zq_aq_IU_1_q_RuAQ_q_RuAQ_Q_hiyP, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 9, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 35, 114};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_plx, __pyx_mstate->__pyx_n_u_ply, __pyx_mstate->__pyx_n_u_scale, __pyx_mstate->__pyx_n_u_string, __pyx_mstate->__pyx_n_u_curry, __pyx_mstate->__pyx_n_u_currx, __pyx_mstate->__pyx_n_u_tileposx, __pyx_mstate->__pyx_n_u_tileposy, __pyx_mstate->__pyx_n_u_tilestring};
+    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cyfunctions_pyx, __pyx_mstate->__pyx_n_u_terrainproject, __pyx_k_Zq_aq_IU_1_q_RuAQ_q_RuAQ_AV6_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 43, 176};
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 47, 171};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_currx, __pyx_mstate->__pyx_n_u_curry, __pyx_mstate->__pyx_n_u_string, __pyx_mstate->__pyx_n_u_currtile, __pyx_mstate->__pyx_n_u_indices, __pyx_mstate->__pyx_n_u_tilestring, __pyx_mstate->__pyx_n_u_currneighbour};
-    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cyfunctions_pyx, __pyx_mstate->__pyx_n_u_tilestringcalculate, __pyx_k_E_Qa_Cxq_5_Qe81BauHTUUaabbc_q_c, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cyfunctions_pyx, __pyx_mstate->__pyx_n_u_tilestringcalculate, __pyx_k_E_Qa_Cxq_5_Qe81BauHTUUaabbc_vS, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;
@@ -9117,7 +9174,7 @@ __Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
         result = name;
         name = NULL;
     } else {
-        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__2);
+        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u_);
     }
     goto done;
 }
