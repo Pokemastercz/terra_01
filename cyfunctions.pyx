@@ -56,3 +56,12 @@ def tilestringcalculate(currx,curry,string):
         else:
             tilestring+="b"
     return(tilestring)
+
+def tileind(plx,ply,msx,msy,scale):
+    indtx=((0-plx)+((math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))*tilesize))
+    indty=((0-ply)+((math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))*tilesize))
+    tilex=(math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))
+    tiley=(math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))
+    print(tilex,tiley)
+    projector("tileindicator",indtx,indty,scale)
+    return(tilex,tiley)

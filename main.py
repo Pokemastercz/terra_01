@@ -26,6 +26,7 @@ while True:
     blocktexturedims=(scale*cyfunctions.tilesize)
     #LAND OF LIBERTY
     cyfunctions.terrainproject(plx,ply,scale)
+    
 
 
 
@@ -34,6 +35,9 @@ while True:
     #LAND OF LIBERTY
     msx,msy=pygame.mouse.get_pos()
     win.blit(pygame.transform.scale(pygame.image.load("resources/textures/entities/cursor.png").convert_alpha(), (5*scale,5*scale)), (msx,msy))
+    tileindx,tileindy=cyfunctions.tileind(plx,ply,msx,msy,scale)
+    plx-=(1-(msx/(ww/2)))/5
+    ply-=(1-(msy/(wh/2)))/5
     print(clock.get_fps())
     pygame.display.update()
     clock.tick(60)
