@@ -12,14 +12,14 @@ scale=5
 
 
 pygame.init
-win = pygame.display.set_mode(((scale*fun.world_width*fun.tilesize),(scale*fun.world_height*fun.tilesize)))
+win = pygame.display.set_mode(((scale*cyfunctions.world_width*cyfunctions.tilesize),(scale*cyfunctions.world_height*cyfunctions.tilesize)))
 ww,wh=win.get_size()
 pygame.display.set_caption("Mazeom")
 clock = pygame.time.Clock()
 
-fun.load_textures(fun.folder_texture_blocks,scale)
+cyfunctions.load_textures(cyfunctions.folder_texture_blocks,scale)
 
-start,goal=fun.startgoal()
+start,goal=cyfunctions.startgoal()
 print(start,goal)
 plx,ply=start
 dir=3 # 1=left, 2=up, 3=right, 4=down
@@ -38,14 +38,14 @@ while running != "False":
             pygame.quit()
             sys.exit()
     win.fill((39,39,39))
-    blocktexturedims=(scale*fun.tilesize)
-    fun.terrainproject(scale,ww,wh)
+    blocktexturedims=(scale*cyfunctions.tilesize)
+    cyfunctions.terrainproject(scale,ww,wh)
     #print(plx,ply)
     if running == "True":
-        plx,ply,dir,dirstring,tick,running=fun.algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start)
+        plx,ply,dir,dirstring,tick,running=cyfunctions.algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start)
         print(dirstring,tick)
     else:
-        tick,running,plx,ply=fun.secondary(plx,ply,dirstring,tick,scale,running,ww,wh)
+        tick,running,plx,ply=cyfunctions.secondary(plx,ply,dirstring,tick,scale,running,ww,wh)
     #Now let's do a purge of the dirstring >:]
 
 
