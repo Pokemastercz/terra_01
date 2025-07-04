@@ -4,12 +4,19 @@ import functions as fun
 # python cysetup.py build_ext --inplace   (builds the cyfunctions file)
 
 
-pygame.init
-win = pygame.display.set_mode()
-ww,wh=win.get_size()
-pygame.display.set_caption("Terra")
-clock = pygame.time.Clock()
+#Varibles
+rate=10
 scale=5
+
+
+
+
+pygame.init
+win = pygame.display.set_mode(((scale*cyfunctions.world_width*cyfunctions.tilesize),(scale*cyfunctions.world_height*cyfunctions.tilesize)))
+ww,wh=win.get_size()
+pygame.display.set_caption("Mazeom")
+clock = pygame.time.Clock()
+
 cyfunctions.load_textures(cyfunctions.folder_texture_blocks,scale)
 
 start,goal=cyfunctions.startgoal()
@@ -21,6 +28,9 @@ pygame.mouse.set_visible(False)
 dirstring=""
 tick=0
 
+
+
+
 while running != "False":
 
     for event in pygame.event.get():
@@ -29,12 +39,12 @@ while running != "False":
             sys.exit()
     win.fill((39,39,39))
     blocktexturedims=(scale*cyfunctions.tilesize)
-    cyfunctions.terrainproject(scale)
+    cyfunctions.terrainproject(scale,ww,wh)
     #print(plx,ply)
     if running == "True":
-        plx,ply,dir,dirstring,tick,running=cyfunctions.algorithm(plx,ply,dir,dirstring,tick,scale,goal,running)
+        plx,ply,dir,dirstring,tick,running=cyfunctions.algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh)
         print(dirstring)
-    #Now i intend to create a secondary system, which optimizes the path, through which the player moved
+    #Now let's do a purge of the dirstring >:]
 
 
 
@@ -43,4 +53,4 @@ while running != "False":
     win.blit(pygame.transform.scale(pygame.image.load("resources/textures/entities/cursor.png").convert_alpha(),(5*scale,5*scale)),(msx,msy))    
     #print(clock.get_fps())
     pygame.display.update()
-    clock.tick(10)
+    clock.tick(rate)

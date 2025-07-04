@@ -8,9 +8,8 @@ folder_texture_blocks = "resources/textures/blocks"
 textures_blocks = {}
 
 tilesize = 8
-ww, wh = 1854, 1010
 
-win = pygame.display.set_mode((ww,wh))
+win = pygame.display.set_mode((0, 0))
 
 world_width = 15
 world_height = 15
@@ -28,12 +27,12 @@ def load_textures(folder,scale):
             textures_blocks[texture_name] = pygame.transform.scale(texture, ((tilesize*scale),(tilesize*scale)))
 
 
-def projector(texture, xpos,ypos,scale):
+def projector(texture,ww,wh,xpos,ypos,scale):
     xposp=((ww/2)+(xpos*scale))
     yposp=((wh/2)+(ypos*scale))
     win.blit(textures_blocks[texture],(xposp,yposp))
 
-def terrainproject(scale):
+def terrainproject(scale,ww,wh):
     string = stringfile.string
     for curry in range(world_height):
         for currx in range(world_width):
@@ -41,9 +40,9 @@ def terrainproject(scale):
             tileposy=((0-(tilesize*(world_height/2)))+(curry*tilesize))
             tilestring = tilestringcalculate(currx,curry,string)
             if tilestring in textures_blocks:
-                projector(tilestring,tileposx,tileposy,scale)
+                projector(tilestring,ww,wh,tileposx,tileposy,scale)
             else:
-                projector("missing",tileposx,tileposy,scale)
+                projector("missing",ww,wh,tileposx,tileposy,scale)
 
 def tilestringcalculate(currx,curry,string):
     currtile=((world_width*(curry+1))+currx)
@@ -73,7 +72,7 @@ def dirctrl(dir):
         dir=4
     return(dir)
 
-def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running):
+def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh):
     currtile=((world_width*(ply+1))+plx)
     plcind=[(-1,0),(0,-1),(1,0),(0,1)]  # left, up, right, down
     indices=[((currtile-1)),((currtile-world_width)),((currtile+1)),((currtile+world_width))]
@@ -92,22 +91,21 @@ def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running):
         if stringfile.string[indices[dir-1]]=="B":
             dir-=1
             dir=dirctrl(dir)
-
         else:
             plx+=plcind[dir-1][0]
             ply+=plcind[dir-1][1]
-            print("Moving to:", (plx, ply), "Direction:", dir)
+            print("Moved to:", (plx, ply), "Direction:", dir)
             dirstring+=str(dir)
             tick+=1
     else:
         plx+=plcind[dir-1][0]
         ply+=plcind[dir-1][1]
-        print("Moving to:", (plx, ply), "Direction:", dir)
+        print("Moved to:", (plx, ply), "Direction:", dir)
         dirstring+=str(dir)
         tick+=1
 
     dir=dirctrl(dir)
     tileposx=((0-(tilesize*(world_width/2)))+(plx*tilesize))
     tileposy=((0-(tilesize*(world_height/2)))+(ply*tilesize))
-    projector(("pl"+str(dir)),tileposx,tileposy,scale)
+    projector(("pl"+str(dir)),ww,wh,tileposx,tileposy,scale)
     return(plx,ply,dir,dirstring,tick,running)
