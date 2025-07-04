@@ -124,3 +124,18 @@ def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start):
     tileposy=((0-(tilesize*(world_height/2)))+(ply*tilesize))
     projector(("pl"+str(dir)),ww,wh,tileposx,tileposy,scale)
     return(plx,ply,dir,dirstring,tick,running)
+
+def secondary(plx,ply,dir,dirstring,tick,scale,running,ww,wh):
+    if not int(dirstring[tick])==5:
+        dir=dirstring[tick-1]
+    else:
+        print("Goal Reached!")
+        running="False"
+    plcind=[(-1,0),(0,-1),(1,0),(0,1)]  # left, up, right, down
+    plx+=plcind[dir-1][0]
+    ply+=plcind[dir-1][1]
+    tileposx=((0-(tilesize*(world_width/2)))+(plx*tilesize))
+    tileposy=((0-(tilesize*(world_height/2)))+(ply*tilesize))
+    projector(("pl"+str(dir)),ww,wh,tileposx,tileposy,scale)
+    tick+=1
+    return(tick,running)

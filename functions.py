@@ -1,7 +1,5 @@
-# game_logic.pyx
 import functions as fun
 import pygame, sys, time ,math, os, cyfunctions
-#import saves.world_0.strings.string as string
 import saves.world_0.strings.string as stringfile
 
 folder_texture_blocks = "resources/textures/blocks"
@@ -16,7 +14,6 @@ world_height = 15
 
 start=(1,1)
 goal=(13,13)
-#LAND OF THE FREE MIND
 
 def load_textures(folder,scale):
     for filename in os.listdir(folder):
@@ -24,7 +21,7 @@ def load_textures(folder,scale):
             texture_path = os.path.join(folder, filename)
             texture_name = os.path.splitext(filename)[0]  
             texture = pygame.image.load(texture_path).convert_alpha()
-            textures_blocks[texture_name] = pygame.transform.scale(texture, ((tilesize*scale),(tilesize*scale)))
+            textures_blocks[texture_name] = pygame.transform.scale(texture,((tilesize*scale),(tilesize*scale)))
 
 
 def projector(texture,ww,wh,xpos,ypos,scale):
@@ -73,11 +70,11 @@ def dirctrl(dir):
     return(dir)
 
 def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start):
-    diropps = {
-        "1": 3,
-        "2": 4,
-        "3": 1,
-        "4": 2
+    diropps={
+        "1":3,
+        "2":4,
+        "3":1,
+        "4":2
     }
     currtile=((world_width*(ply+1))+plx)
     plcind=[(-1,0),(0,-1),(1,0),(0,1)]  # left, up, right, down
@@ -102,13 +99,13 @@ def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start):
         else:
             plx+=plcind[dir-1][0]
             ply+=plcind[dir-1][1]
-            print((plx, ply), dir)
+            print((plx,ply),dir)
             dirstring+=str(dir)
             tick+=1
     else:
         plx+=plcind[dir-1][0]
         ply+=plcind[dir-1][1]
-        print((plx, ply), dir)
+        print((plx,ply),dir)
         dirstring+=str(dir)
         tick+=1
 
@@ -124,3 +121,19 @@ def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start):
     tileposy=((0-(tilesize*(world_height/2)))+(ply*tilesize))
     projector(("pl"+str(dir)),ww,wh,tileposx,tileposy,scale)
     return(plx,ply,dir,dirstring,tick,running)
+
+def secondary(plx,ply,dirstring,tick,scale,running,ww,wh):
+    if not dirstring[tick]=="5":
+        dir=dirstring[tick]
+        plcind=[(-1,0),(0,-1),(1,0),(0,1)]  # left, up, right, down
+        plx+=plcind[int(dir)-1][0]
+        ply+=plcind[int(dir)-1][1]
+        tileposx=((0-(tilesize*(world_width/2)))+(plx*tilesize))
+        tileposy=((0-(tilesize*(world_height/2)))+(ply*tilesize))
+        projector(("pl"+str(dir)),ww,wh,tileposx,tileposy,scale)
+        tick+=1
+        print(dirstring,tick)
+    else:
+        print("Goal Reached!")
+        running="False"
+    return(tick,running,plx,ply)
