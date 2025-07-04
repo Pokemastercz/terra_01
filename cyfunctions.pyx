@@ -41,7 +41,7 @@ def terrainproject(scale):
             if tilestring in textures_blocks:
                 projector(tilestring,tileposx,tileposy,scale)
             else:
-                projector("default",tileposx,tileposy,scale)
+                projector("missing",tileposx,tileposy,scale)
 
 def tilestringcalculate(currx,curry,string):
     currtile=((world_width*(curry+1))+currx)

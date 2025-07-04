@@ -2282,10 +2282,10 @@ static const char __pyx_k_folder[] = "folder";
 static const char __pyx_k_module[] = "__module__";
 static const char __pyx_k_pygame[] = "pygame";
 static const char __pyx_k_string[] = "string";
-static const char __pyx_k_default[] = "default";
 static const char __pyx_k_display[] = "display";
 static const char __pyx_k_indices[] = "indices";
 static const char __pyx_k_listdir[] = "listdir";
+static const char __pyx_k_missing[] = "missing";
 static const char __pyx_k_strings[] = "strings";
 static const char __pyx_k_texture[] = "texture";
 static const char __pyx_k_world_0[] = "world_0";
@@ -2433,26 +2433,26 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_curry __pyx_string_tab[11]
 #define __pyx_n_u_cyfunctions __pyx_string_tab[12]
 #define __pyx_kp_u_cyfunctions_pyx __pyx_string_tab[13]
-#define __pyx_n_u_default __pyx_string_tab[14]
-#define __pyx_n_u_display __pyx_string_tab[15]
-#define __pyx_n_u_endswith __pyx_string_tab[16]
-#define __pyx_n_u_filename __pyx_string_tab[17]
-#define __pyx_n_u_folder __pyx_string_tab[18]
-#define __pyx_n_u_folder_texture_blocks __pyx_string_tab[19]
-#define __pyx_n_u_fun __pyx_string_tab[20]
-#define __pyx_n_u_func __pyx_string_tab[21]
-#define __pyx_n_u_functions __pyx_string_tab[22]
-#define __pyx_n_u_image __pyx_string_tab[23]
-#define __pyx_n_u_indices __pyx_string_tab[24]
-#define __pyx_n_u_initializing __pyx_string_tab[25]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[26]
-#define __pyx_n_u_join __pyx_string_tab[27]
-#define __pyx_kp_u_jpg __pyx_string_tab[28]
-#define __pyx_n_u_listdir __pyx_string_tab[29]
-#define __pyx_n_u_load __pyx_string_tab[30]
-#define __pyx_n_u_load_textures __pyx_string_tab[31]
-#define __pyx_n_u_main __pyx_string_tab[32]
-#define __pyx_n_u_math __pyx_string_tab[33]
+#define __pyx_n_u_display __pyx_string_tab[14]
+#define __pyx_n_u_endswith __pyx_string_tab[15]
+#define __pyx_n_u_filename __pyx_string_tab[16]
+#define __pyx_n_u_folder __pyx_string_tab[17]
+#define __pyx_n_u_folder_texture_blocks __pyx_string_tab[18]
+#define __pyx_n_u_fun __pyx_string_tab[19]
+#define __pyx_n_u_func __pyx_string_tab[20]
+#define __pyx_n_u_functions __pyx_string_tab[21]
+#define __pyx_n_u_image __pyx_string_tab[22]
+#define __pyx_n_u_indices __pyx_string_tab[23]
+#define __pyx_n_u_initializing __pyx_string_tab[24]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[25]
+#define __pyx_n_u_join __pyx_string_tab[26]
+#define __pyx_kp_u_jpg __pyx_string_tab[27]
+#define __pyx_n_u_listdir __pyx_string_tab[28]
+#define __pyx_n_u_load __pyx_string_tab[29]
+#define __pyx_n_u_load_textures __pyx_string_tab[30]
+#define __pyx_n_u_main __pyx_string_tab[31]
+#define __pyx_n_u_math __pyx_string_tab[32]
+#define __pyx_n_u_missing __pyx_string_tab[33]
 #define __pyx_n_u_module __pyx_string_tab[34]
 #define __pyx_n_u_name __pyx_string_tab[35]
 #define __pyx_n_u_os __pyx_string_tab[36]
@@ -3656,7 +3656,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
  *             if tilestring in textures_blocks:
  *                 projector(tilestring,tileposx,tileposy,scale)             # <<<<<<<<<<<<<<
  *             else:
- *                 projector("default",tileposx,tileposy,scale)
+ *                 projector("missing",tileposx,tileposy,scale)
 */
         __pyx_t_4 = NULL;
         __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_projector); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 42, __pyx_L1_error)
@@ -3696,7 +3696,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
       /* "cyfunctions.pyx":44
  *                 projector(tilestring,tileposx,tileposy,scale)
  *             else:
- *                 projector("default",tileposx,tileposy,scale)             # <<<<<<<<<<<<<<
+ *                 projector("missing",tileposx,tileposy,scale)             # <<<<<<<<<<<<<<
  * 
  * def tilestringcalculate(currx,curry,string):
 */
@@ -3717,7 +3717,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
         }
         #endif
         {
-          PyObject *__pyx_callargs[5] = {__pyx_t_8, __pyx_mstate_global->__pyx_n_u_default, __pyx_v_tileposx, __pyx_v_tileposy, __pyx_v_scale};
+          PyObject *__pyx_callargs[5] = {__pyx_t_8, __pyx_mstate_global->__pyx_n_u_missing, __pyx_v_tileposx, __pyx_v_tileposy, __pyx_v_scale};
           __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+__pyx_t_5, (5-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -3780,7 +3780,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
 }
 
 /* "cyfunctions.pyx":46
- *                 projector("default",tileposx,tileposy,scale)
+ *                 projector("missing",tileposx,tileposy,scale)
  * 
  * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
@@ -4077,7 +4077,7 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
   goto __pyx_L0;
 
   /* "cyfunctions.pyx":46
- *                 projector("default",tileposx,tileposy,scale)
+ *                 projector("missing",tileposx,tileposy,scale)
  * 
  * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
@@ -4664,7 +4664,7 @@ __Pyx_RefNannySetupContext("PyInit_cyfunctions", 0);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "cyfunctions.pyx":46
- *                 projector("default",tileposx,tileposy,scale)
+ *                 projector("missing",tileposx,tileposy,scale)
  * 
  * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
@@ -4762,7 +4762,6 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_curry, sizeof(__pyx_k_curry), 0, 1, 1}, /* PyObject cname: __pyx_n_u_curry */
   {__pyx_k_cyfunctions, sizeof(__pyx_k_cyfunctions), 0, 1, 1}, /* PyObject cname: __pyx_n_u_cyfunctions */
   {__pyx_k_cyfunctions_pyx, sizeof(__pyx_k_cyfunctions_pyx), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_cyfunctions_pyx */
-  {__pyx_k_default, sizeof(__pyx_k_default), 0, 1, 1}, /* PyObject cname: __pyx_n_u_default */
   {__pyx_k_display, sizeof(__pyx_k_display), 0, 1, 1}, /* PyObject cname: __pyx_n_u_display */
   {__pyx_k_endswith, sizeof(__pyx_k_endswith), 0, 1, 1}, /* PyObject cname: __pyx_n_u_endswith */
   {__pyx_k_filename, sizeof(__pyx_k_filename), 0, 1, 1}, /* PyObject cname: __pyx_n_u_filename */
@@ -4782,6 +4781,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_load_textures, sizeof(__pyx_k_load_textures), 0, 1, 1}, /* PyObject cname: __pyx_n_u_load_textures */
   {__pyx_k_main, sizeof(__pyx_k_main), 0, 1, 1}, /* PyObject cname: __pyx_n_u_main */
   {__pyx_k_math, sizeof(__pyx_k_math), 0, 1, 1}, /* PyObject cname: __pyx_n_u_math */
+  {__pyx_k_missing, sizeof(__pyx_k_missing), 0, 1, 1}, /* PyObject cname: __pyx_n_u_missing */
   {__pyx_k_module, sizeof(__pyx_k_module), 0, 1, 1}, /* PyObject cname: __pyx_n_u_module */
   {__pyx_k_name, sizeof(__pyx_k_name), 0, 1, 1}, /* PyObject cname: __pyx_n_u_name */
   {__pyx_k_os, sizeof(__pyx_k_os), 0, 1, 1}, /* PyObject cname: __pyx_n_u_os */
