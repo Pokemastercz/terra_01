@@ -1,9 +1,10 @@
+# game_logic.pyx
+import functions as fun
 import pygame, sys, time ,math, os, cyfunctions
 #import saves.world_0.strings.string as string
 import saves.world_0.strings.string as stringfile
 
 folder_texture_blocks = "resources/textures/blocks"
-string_filepath = "saves/world_0/strings/string.py"
 textures_blocks = {}
 
 tilesize = 8
@@ -30,23 +31,24 @@ def projector(texture, xpos,ypos,scale):
     yposp=((wh/2)+(ypos*scale))
     win.blit(textures_blocks[texture],(xposp,yposp))
 
-def terrainproject(plx,ply,scale):
+def terrainproject(scale):
     string = stringfile.string
     for curry in range(world_height):
         for currx in range(world_width):
-            tileposx=((0-plx)+(currx*tilesize))
-            tileposy=((0-ply)+(curry*tilesize))
-            projector(tilestringcalculate(currx,curry,string),tileposx,tileposy,scale)
+            tileposx=((0-(tilesize*(world_width/2)))+(currx*tilesize))
+            tileposy=((0-(tilesize*(world_height/2)))+(curry*tilesize))
+            tilestring = tilestringcalculate(currx,curry,string)
+            if tilestring in textures_blocks:
+                projector(tilestring,tileposx,tileposy,scale)
+            else:
+                projector("default",tileposx,tileposy,scale)
 
 def tilestringcalculate(currx,curry,string):
     currtile=((world_width*(curry+1))+currx)
-    indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
-    tilestring=""
-    tilestring+=string[((currtile*5)+1)]
-    tilestring+=string[((currtile*5)+3)]
-    tilestring+=string[((currtile*5)+4)]
+    indices=[((currtile-1)),((currtile-world_width)),((currtile+1)),((currtile+world_width))]
+    tilestring=string[currtile]
     for currneighbour in indices:
-        if string[currneighbour+3]==string[(currtile*5)+3]:
+        if string[currneighbour]==string[currtile]:
             tilestring+="a"
         else:
             tilestring+="b"
