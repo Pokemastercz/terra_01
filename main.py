@@ -42,8 +42,11 @@ while running != "False":
     cyfunctions.terrainproject(scale,ww,wh)
     #print(plx,ply)
     if running == "True":
-        plx,ply,dir,dirstring,tick,running=cyfunctions.algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh)
-        print(dirstring)
+        plx,ply,dir,dirstring,tick,running=cyfunctions.algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start)
+        print(dirstring,tick)
+    else:
+        plx,ply,dir,dirstring,tick,running=cyfunctions.secondary(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start)
+        print(dirstring,tick)
     #Now let's do a purge of the dirstring >:]
 
 

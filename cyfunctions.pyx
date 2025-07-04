@@ -72,15 +72,23 @@ def dirctrl(dir):
         dir=4
     return(dir)
 
-def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh):
+def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh,start):
+    diropps = {
+        "1": 3,
+        "2": 4,
+        "3": 1,
+        "4": 2
+    }
     currtile=((world_width*(ply+1))+plx)
     plcind=[(-1,0),(0,-1),(1,0),(0,1)]  # left, up, right, down
     indices=[((currtile-1)),((currtile-world_width)),((currtile+1)),((currtile+world_width))]
     if plx==goal[0] and ply==goal[1]:
         print("Goal Reached!")
         dirstring+="5"
-        tick+=1
+        tick=0
+        dir=3  # reset direction to right
         running="SecondaryActive"
+        plx,ply=start
         return(plx,ply,dir,dirstring,tick,running)
     
     dir+=1
@@ -94,15 +102,22 @@ def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running,ww,wh):
         else:
             plx+=plcind[dir-1][0]
             ply+=plcind[dir-1][1]
-            print("Moved to:", (plx, ply), "Direction:", dir)
+            print((plx, ply), dir)
             dirstring+=str(dir)
             tick+=1
     else:
         plx+=plcind[dir-1][0]
         ply+=plcind[dir-1][1]
-        print("Moved to:", (plx, ply), "Direction:", dir)
+        print((plx, ply), dir)
         dirstring+=str(dir)
         tick+=1
+
+    # dirstring purge
+    if len(dirstring)>0:
+        virtdir=diropps[dirstring[len(dirstring)-1]]
+        if int(dirstring[tick-2])==virtdir:
+            dirstring=dirstring[:-2]
+            tick-=2
 
     dir=dirctrl(dir)
     tileposx=((0-(tilesize*(world_width/2)))+(plx*tilesize))
