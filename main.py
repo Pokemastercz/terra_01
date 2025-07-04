@@ -12,30 +12,30 @@ clock = pygame.time.Clock()
 scale=5
 cyfunctions.load_textures(cyfunctions.folder_texture_blocks,scale)
 
-plx, ply = 60,60
-
+start,goal=cyfunctions.startgoal()
+print(start,goal)
+plx,ply=start
+dir=3 # 1=left, 2=up, 3=right, 4=down
+running=True
 pygame.mouse.set_visible(False)
 
-while True:
+while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    win.fill((39, 39, 39))
-    
+    win.fill((39,39,39))
     blocktexturedims=(scale*cyfunctions.tilesize)
-    #LAND OF LIBERTY
     cyfunctions.terrainproject(scale)
-    
+    print(plx,ply)
+    plx,ply,dir,running=cyfunctions.algorithm(plx,ply,dir,scale,goal,running)
 
 
 
 
-
-    #LAND OF LIBERTY
     msx,msy=pygame.mouse.get_pos()
-    win.blit(pygame.transform.scale(pygame.image.load("resources/textures/entities/cursor.png").convert_alpha(), (5*scale,5*scale)), (msx,msy))    
-    print(clock.get_fps())
+    win.blit(pygame.transform.scale(pygame.image.load("resources/textures/entities/cursor.png").convert_alpha(),(5*scale,5*scale)),(msx,msy))    
+    #print(clock.get_fps())
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(5)

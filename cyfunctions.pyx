@@ -15,6 +15,8 @@ win = pygame.display.set_mode((ww,wh))
 world_width = 15
 world_height = 15
 
+start=(1,1)
+goal=(13,13)
 #LAND OF THE FREE MIND
 
 def load_textures(folder,scale):
@@ -53,3 +55,53 @@ def tilestringcalculate(currx,curry,string):
         else:
             tilestring+="b"
     return(tilestring)
+
+def startgoal():
+    for currx in range(world_width):
+        for curry in range(world_height):
+            currtile=((world_width*(curry+1))+currx)
+            if stringfile.string[currtile]=="C":
+                start=(currx,curry)
+            if stringfile.string[currtile]=="D":
+                goal=(currx,curry)
+    return(start, goal)
+
+def dirctrl(dir):
+    if dir>4:
+        dir=1
+    if dir<1:
+        dir=4
+    return(dir)
+
+def algorithm(plx,ply,dir,scale,goal,running):
+    currtile=((world_width*(ply+1))+plx)
+    plcind=[(-1,0),(0,-1),(1,0),(0,1)]  # left, up, right, down
+    indices=[((currtile-1)),((currtile-world_width)),((currtile+1)),((currtile+world_width))]
+    if plx==goal[0] and ply==goal[1]:
+        print("Goal Reached!")
+        running=False
+        return(plx,ply,dir,running)
+    
+    dir+=1
+    dir=dirctrl(dir)
+    if stringfile.string[indices[dir-1]]=="B":
+        dir-=1
+        dir=dirctrl(dir)
+        if stringfile.string[indices[dir-1]]=="B":
+            dir-=1
+            dir=dirctrl(dir)
+
+        else:
+            plx+=plcind[dir-1][0]
+            ply+=plcind[dir-1][1]
+            print("Moving to:", (plx, ply), "Direction:", dir)
+    else:
+        plx+=plcind[dir-1][0]
+        ply+=plcind[dir-1][1]
+        print("Moving to:", (plx, ply), "Direction:", dir)
+
+    dir=dirctrl(dir)
+    tileposx=((0-(tilesize*(world_width/2)))+(plx*tilesize))
+    tileposy=((0-(tilesize*(world_height/2)))+(ply*tilesize))
+    projector(("pl"+str(dir)),tileposx,tileposy,scale)
+    return(plx,ply,dir,running)
