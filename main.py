@@ -16,10 +16,12 @@ start,goal=cyfunctions.startgoal()
 print(start,goal)
 plx,ply=start
 dir=3 # 1=left, 2=up, 3=right, 4=down
-running=True
+running="True"
 pygame.mouse.set_visible(False)
+dirstring=""
+tick=0
 
-while running:
+while running != "False":
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -28,8 +30,11 @@ while running:
     win.fill((39,39,39))
     blocktexturedims=(scale*cyfunctions.tilesize)
     cyfunctions.terrainproject(scale)
-    print(plx,ply)
-    plx,ply,dir,running=cyfunctions.algorithm(plx,ply,dir,scale,goal,running)
+    #print(plx,ply)
+    if running == "True":
+        plx,ply,dir,dirstring,tick,running=cyfunctions.algorithm(plx,ply,dir,dirstring,tick,scale,goal,running)
+        print(dirstring)
+    #Now i intend to create a secondary system, which optimizes the path, through which the player moved
 
 
 
@@ -38,4 +43,4 @@ while running:
     win.blit(pygame.transform.scale(pygame.image.load("resources/textures/entities/cursor.png").convert_alpha(),(5*scale,5*scale)),(msx,msy))    
     #print(clock.get_fps())
     pygame.display.update()
-    clock.tick(5)
+    clock.tick(10)

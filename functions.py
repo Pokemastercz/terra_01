@@ -73,14 +73,16 @@ def dirctrl(dir):
         dir=4
     return(dir)
 
-def algorithm(plx,ply,dir,scale,goal):
+def algorithm(plx,ply,dir,dirstring,tick,scale,goal,running):
     currtile=((world_width*(ply+1))+plx)
     plcind=[(-1,0),(0,-1),(1,0),(0,1)]  # left, up, right, down
     indices=[((currtile-1)),((currtile-world_width)),((currtile+1)),((currtile+world_width))]
     if plx==goal[0] and ply==goal[1]:
         print("Goal Reached!")
-        pygame.quit()
-        return
+        dirstring+="5"
+        tick+=1
+        running="SecondaryActive"
+        return(plx,ply,dir,dirstring,tick,running)
     
     dir+=1
     dir=dirctrl(dir)
@@ -95,13 +97,17 @@ def algorithm(plx,ply,dir,scale,goal):
             plx+=plcind[dir-1][0]
             ply+=plcind[dir-1][1]
             print("Moving to:", (plx, ply), "Direction:", dir)
+            dirstring+=str(dir)
+            tick+=1
     else:
         plx+=plcind[dir-1][0]
         ply+=plcind[dir-1][1]
         print("Moving to:", (plx, ply), "Direction:", dir)
+        dirstring+=str(dir)
+        tick+=1
 
     dir=dirctrl(dir)
     tileposx=((0-(tilesize*(world_width/2)))+(plx*tilesize))
     tileposy=((0-(tilesize*(world_height/2)))+(ply*tilesize))
     projector(("pl"+str(dir)),tileposx,tileposy,scale)
-    return(plx,ply,dir)
+    return(plx,ply,dir,dirstring,tick,running)
