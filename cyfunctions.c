@@ -1946,6 +1946,40 @@ static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 static PyObject *__Pyx_ImportDottedModule(PyObject *name, PyObject *parts_tuple);
 static PyObject *__Pyx_ImportDottedModule_WalkParts(PyObject *module, PyObject *name, PyObject *parts_tuple);
 
+/* PyObjectLookupSpecial.proto */
+#if CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
+#define __Pyx_PyObject_LookupSpecialNoError(obj, attr_name)  __Pyx__PyObject_LookupSpecial(obj, attr_name, 0)
+#define __Pyx_PyObject_LookupSpecial(obj, attr_name)  __Pyx__PyObject_LookupSpecial(obj, attr_name, 1)
+static CYTHON_INLINE PyObject* __Pyx__PyObject_LookupSpecial(PyObject* obj, PyObject* attr_name, int with_error);
+#else
+#define __Pyx_PyObject_LookupSpecialNoError(o,n) __Pyx_PyObject_GetAttrStrNoError(o,n)
+#define __Pyx_PyObject_LookupSpecial(o,n) __Pyx_PyObject_GetAttrStr(o,n)
+#endif
+
+/* GetTopmostException.proto */
+#if CYTHON_USE_EXC_INFO_STACK && CYTHON_FAST_THREAD_STATE
+static _PyErr_StackItem * __Pyx_PyErr_GetTopmostException(PyThreadState *tstate);
+#endif
+
+/* SaveResetException.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_ExceptionSave(type, value, tb)  __Pyx__ExceptionSave(__pyx_tstate, type, value, tb)
+static CYTHON_INLINE void __Pyx__ExceptionSave(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
+#define __Pyx_ExceptionReset(type, value, tb)  __Pyx__ExceptionReset(__pyx_tstate, type, value, tb)
+static CYTHON_INLINE void __Pyx__ExceptionReset(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
+#else
+#define __Pyx_ExceptionSave(type, value, tb)   PyErr_GetExcInfo(type, value, tb)
+#define __Pyx_ExceptionReset(type, value, tb)  PyErr_SetExcInfo(type, value, tb)
+#endif
+
+/* GetException.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_GetException(type, value, tb)  __Pyx__GetException(__pyx_tstate, type, value, tb)
+static int __Pyx__GetException(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
+#else
+static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb);
+#endif
+
 /* LimitedApiGetTypeDict.proto */
 #if CYTHON_COMPILING_IN_LIMITED_API
 static PyObject *__Pyx_GetTypeDict(PyTypeObject *tp);
@@ -2251,12 +2285,15 @@ int __pyx_module_is_main_cyfunctions = 0;
 
 /* Implementation of "cyfunctions" */
 /* #### Code section: global_var ### */
+static PyObject *__pyx_builtin_open;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_print;
 /* #### Code section: string_decls ### */
 static const char __pyx_k_[] = "?";
 static const char __pyx_k_a[] = "a";
 static const char __pyx_k_b[] = "b";
+static const char __pyx_k_f[] = "f";
+static const char __pyx_k_r[] = "r";
 static const char __pyx_k_os[] = "os";
 static const char __pyx_k_wh[] = "wh";
 static const char __pyx_k_ww[] = "ww";
@@ -2271,13 +2308,16 @@ static const char __pyx_k_pop[] = "pop";
 static const char __pyx_k_sys[] = "sys";
 static const char __pyx_k_win[] = "win";
 static const char __pyx_k_blit[] = "blit";
+static const char __pyx_k_exit[] = "__exit__";
 static const char __pyx_k_func[] = "__func__";
 static const char __pyx_k_join[] = "join";
 static const char __pyx_k_load[] = "load";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_math[] = "math";
 static const char __pyx_k_name[] = "__name__";
+static const char __pyx_k_open[] = "open";
 static const char __pyx_k_path[] = "path";
+static const char __pyx_k_read[] = "read";
 static const char __pyx_k_spec[] = "__spec__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_time[] = "time";
@@ -2285,6 +2325,7 @@ static const char __pyx_k_xpos[] = "xpos";
 static const char __pyx_k_ypos[] = "ypos";
 static const char __pyx_k_currx[] = "currx";
 static const char __pyx_k_curry[] = "curry";
+static const char __pyx_k_enter[] = "__enter__";
 static const char __pyx_k_floor[] = "floor";
 static const char __pyx_k_image[] = "image";
 static const char __pyx_k_indtx[] = "indtx";
@@ -2349,9 +2390,10 @@ static const char __pyx_k_resources_textures_blocks[] = "resources/textures/bloc
 static const char __pyx_k_saves_world_0_strings_string[] = "saves.world_0.strings.string";
 static const char __pyx_k_Bhaq_89AWCxy_2U_q_2U_1IQa_fF_q[] = "\200\001\330\004\010\210\014\220B\220h\230a\230q\330\010\013\2108\2209\230A\230W\240C\240x\250y\270\001\270\021\330\014\033\2302\230U\240%\240q\250\010\260\001\330\014\033\2302\230U\240)\2501\250I\260Q\260a\330\014\026\220f\230F\240%\240q\250\r\260^\3001\330\014\033\2301\320\034,\250F\260*\270F\300!\300:\310Q\310h\320VW\320W_\320_g\320gh\320hi";
 static const char __pyx_k_E_Qa_Cxq_5_Qe81BauHTUUaabbc_vS[] = "\200\001\330\004\017\210{\230\"\230E\240\021\240#\240Q\240a\330\004\014\210C\210x\220q\230\002\230!\2305\240\010\250\001\250\034\260Q\260e\2708\3001\300B\300a\300u\310H\320TU\320Ua\320ab\320bc\330\004\017\210v\220S\230\010\240\001\240\022\2401\240A\330\004\020\220\006\220c\230\030\240\021\240\"\240A\240Q\330\004\020\220\006\220c\230\030\240\021\240\"\240A\240Q\330\004\010\320\010\031\230\021\330\010\013\2106\220\021\220-\230q\240\002\240\"\240F\250\"\250H\260A\260R\260q\270\001\330\014\030\230\001\340\014\030\230\001\330\004\013\2101";
-static const char __pyx_k_Zq_aq_IU_1_q_RuAQ_q_RuAQ_AV6_Q[] = "\200\001\330\004\r\210Z\220q\330\004\010\210\t\220\025\220a\220q\330\010\014\210I\220U\230!\2301\330\014\027\220q\230\001\230\024\230R\230u\240A\240Q\330\014\027\220q\230\001\230\024\230R\230u\240A\240Q\330\014\031\320\031,\250A\250V\2606\270\021\330\014\017\210{\230#\230Q\330\020\031\230\021\230+\240Y\250i\260q\340\020\031\230\021\230*\240I\250Y\260a";
 static const char __pyx_k_AQd_T_s_d_ARq_AWBk_AQd_T_s_d_AR[] = "\200\001\330\004\014\210A\210Q\210d\220#\220T\230\026\230s\240$\240d\250\"\250A\250R\250q\260\004\260A\260W\270B\270k\310\021\310!\330\004\014\210A\210Q\210d\220#\220T\230\026\230s\240$\240d\250\"\250A\250R\250q\260\004\260A\260W\270B\270k\310\021\310!\330\004\013\2104\210v\220S\230\004\230D\240\002\240!\2402\240Q\240d\250!\2507\260\"\260A\330\004\013\2104\210v\220S\230\004\230D\240\002\240!\2402\240Q\240d\250!\2507\260\"\260A\330\004\t\210\021\210&\220\001\330\004\r\210Q\320\016\036\230f\240F\250!\330\004\013\2106\220\021";
+static const char __pyx_k_Q_aq_IU_1_q_RuAQ_q_RuAQ_AV6_Q_Y[] = "\200\001\330\004\r\210Q\330\004\010\210\t\220\025\220a\220q\330\010\014\210I\220U\230!\2301\330\014\027\220q\230\001\230\024\230R\230u\240A\240Q\330\014\027\220q\230\001\230\024\230R\230u\240A\240Q\330\014\031\320\031,\250A\250V\2606\270\021\330\014\017\210{\230#\230Q\330\020\031\230\021\230+\240Y\250i\260q\340\020\031\230\021\230*\240I\250Y\260a";
 static const char __pyx_k_saves_world_0_strings_string_py[] = "saves/world_0/strings/string.py";
+static const char __pyx_k_saves_world_0_strings_spawn_wstr[] = "saves/world_0/strings/spawn.wstr";
 /* #### Code section: decls ### */
 static PyObject *__pyx_pf_11cyfunctions_load_textures(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_folder, PyObject *__pyx_v_scale); /* proto */
 static PyObject *__pyx_pf_11cyfunctions_2projector(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_texture, PyObject *__pyx_v_xpos, PyObject *__pyx_v_ypos, PyObject *__pyx_v_scale); /* proto */
@@ -2397,9 +2439,9 @@ typedef struct {
   PyTypeObject *__pyx_CoroutineType;
   #endif
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
-  PyObject *__pyx_tuple[1];
+  PyObject *__pyx_tuple[3];
   PyObject *__pyx_codeobj_tab[5];
-  PyObject *__pyx_string_tab[93];
+  PyObject *__pyx_string_tab[100];
   PyObject *__pyx_int_0;
   PyObject *__pyx_int_1;
   PyObject *__pyx_int_2;
@@ -2464,82 +2506,89 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_default __pyx_string_tab[14]
 #define __pyx_n_u_display __pyx_string_tab[15]
 #define __pyx_n_u_endswith __pyx_string_tab[16]
-#define __pyx_n_u_filename __pyx_string_tab[17]
-#define __pyx_n_u_floor __pyx_string_tab[18]
-#define __pyx_n_u_folder __pyx_string_tab[19]
-#define __pyx_n_u_folder_texture_blocks __pyx_string_tab[20]
-#define __pyx_n_u_fun __pyx_string_tab[21]
-#define __pyx_n_u_func __pyx_string_tab[22]
-#define __pyx_n_u_functions __pyx_string_tab[23]
-#define __pyx_n_u_image __pyx_string_tab[24]
-#define __pyx_n_u_indices __pyx_string_tab[25]
-#define __pyx_n_u_indtx __pyx_string_tab[26]
-#define __pyx_n_u_indty __pyx_string_tab[27]
-#define __pyx_n_u_initializing __pyx_string_tab[28]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[29]
-#define __pyx_n_u_join __pyx_string_tab[30]
-#define __pyx_kp_u_jpg __pyx_string_tab[31]
-#define __pyx_n_u_listdir __pyx_string_tab[32]
-#define __pyx_n_u_load __pyx_string_tab[33]
-#define __pyx_n_u_load_textures __pyx_string_tab[34]
-#define __pyx_n_u_main __pyx_string_tab[35]
-#define __pyx_n_u_math __pyx_string_tab[36]
-#define __pyx_n_u_module __pyx_string_tab[37]
-#define __pyx_n_u_msx __pyx_string_tab[38]
-#define __pyx_n_u_msy __pyx_string_tab[39]
-#define __pyx_n_u_name __pyx_string_tab[40]
-#define __pyx_n_u_os __pyx_string_tab[41]
-#define __pyx_n_u_path __pyx_string_tab[42]
-#define __pyx_n_u_plx __pyx_string_tab[43]
-#define __pyx_n_u_ply __pyx_string_tab[44]
-#define __pyx_kp_u_png __pyx_string_tab[45]
-#define __pyx_n_u_pop __pyx_string_tab[46]
-#define __pyx_n_u_print __pyx_string_tab[47]
-#define __pyx_n_u_projector __pyx_string_tab[48]
-#define __pyx_n_u_pygame __pyx_string_tab[49]
-#define __pyx_n_u_qualname __pyx_string_tab[50]
-#define __pyx_n_u_range __pyx_string_tab[51]
-#define __pyx_kp_u_resources_textures_blocks __pyx_string_tab[52]
-#define __pyx_n_u_saves __pyx_string_tab[53]
-#define __pyx_n_u_saves_world_0_strings_string __pyx_string_tab[54]
-#define __pyx_kp_u_saves_world_0_strings_string_py __pyx_string_tab[55]
-#define __pyx_n_u_scale __pyx_string_tab[56]
-#define __pyx_n_u_set_mode __pyx_string_tab[57]
-#define __pyx_n_u_set_name __pyx_string_tab[58]
-#define __pyx_n_u_spec __pyx_string_tab[59]
-#define __pyx_n_u_splitext __pyx_string_tab[60]
-#define __pyx_n_u_string __pyx_string_tab[61]
-#define __pyx_n_u_string_filepath __pyx_string_tab[62]
-#define __pyx_n_u_stringfile __pyx_string_tab[63]
-#define __pyx_n_u_strings __pyx_string_tab[64]
-#define __pyx_n_u_sys __pyx_string_tab[65]
-#define __pyx_n_u_terrainproject __pyx_string_tab[66]
-#define __pyx_n_u_test __pyx_string_tab[67]
-#define __pyx_n_u_texture __pyx_string_tab[68]
-#define __pyx_n_u_texture_name __pyx_string_tab[69]
-#define __pyx_n_u_texture_path __pyx_string_tab[70]
-#define __pyx_n_u_textures_blocks __pyx_string_tab[71]
-#define __pyx_n_u_tileind __pyx_string_tab[72]
-#define __pyx_n_u_tileindicator __pyx_string_tab[73]
-#define __pyx_n_u_tileposx __pyx_string_tab[74]
-#define __pyx_n_u_tileposy __pyx_string_tab[75]
-#define __pyx_n_u_tilesize __pyx_string_tab[76]
-#define __pyx_n_u_tilestring __pyx_string_tab[77]
-#define __pyx_n_u_tilestringcalculate __pyx_string_tab[78]
-#define __pyx_n_u_tilex __pyx_string_tab[79]
-#define __pyx_n_u_tiley __pyx_string_tab[80]
-#define __pyx_n_u_time __pyx_string_tab[81]
-#define __pyx_n_u_transform __pyx_string_tab[82]
-#define __pyx_n_u_wh __pyx_string_tab[83]
-#define __pyx_n_u_win __pyx_string_tab[84]
-#define __pyx_n_u_world_0 __pyx_string_tab[85]
-#define __pyx_n_u_world_height __pyx_string_tab[86]
-#define __pyx_n_u_world_width __pyx_string_tab[87]
-#define __pyx_n_u_ww __pyx_string_tab[88]
-#define __pyx_n_u_xpos __pyx_string_tab[89]
-#define __pyx_n_u_xposp __pyx_string_tab[90]
-#define __pyx_n_u_ypos __pyx_string_tab[91]
-#define __pyx_n_u_yposp __pyx_string_tab[92]
+#define __pyx_n_u_enter __pyx_string_tab[17]
+#define __pyx_n_u_exit __pyx_string_tab[18]
+#define __pyx_n_u_f __pyx_string_tab[19]
+#define __pyx_n_u_filename __pyx_string_tab[20]
+#define __pyx_n_u_floor __pyx_string_tab[21]
+#define __pyx_n_u_folder __pyx_string_tab[22]
+#define __pyx_n_u_folder_texture_blocks __pyx_string_tab[23]
+#define __pyx_n_u_fun __pyx_string_tab[24]
+#define __pyx_n_u_func __pyx_string_tab[25]
+#define __pyx_n_u_functions __pyx_string_tab[26]
+#define __pyx_n_u_image __pyx_string_tab[27]
+#define __pyx_n_u_indices __pyx_string_tab[28]
+#define __pyx_n_u_indtx __pyx_string_tab[29]
+#define __pyx_n_u_indty __pyx_string_tab[30]
+#define __pyx_n_u_initializing __pyx_string_tab[31]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[32]
+#define __pyx_n_u_join __pyx_string_tab[33]
+#define __pyx_kp_u_jpg __pyx_string_tab[34]
+#define __pyx_n_u_listdir __pyx_string_tab[35]
+#define __pyx_n_u_load __pyx_string_tab[36]
+#define __pyx_n_u_load_textures __pyx_string_tab[37]
+#define __pyx_n_u_main __pyx_string_tab[38]
+#define __pyx_n_u_math __pyx_string_tab[39]
+#define __pyx_n_u_module __pyx_string_tab[40]
+#define __pyx_n_u_msx __pyx_string_tab[41]
+#define __pyx_n_u_msy __pyx_string_tab[42]
+#define __pyx_n_u_name __pyx_string_tab[43]
+#define __pyx_n_u_open __pyx_string_tab[44]
+#define __pyx_n_u_os __pyx_string_tab[45]
+#define __pyx_n_u_path __pyx_string_tab[46]
+#define __pyx_n_u_plx __pyx_string_tab[47]
+#define __pyx_n_u_ply __pyx_string_tab[48]
+#define __pyx_kp_u_png __pyx_string_tab[49]
+#define __pyx_n_u_pop __pyx_string_tab[50]
+#define __pyx_n_u_print __pyx_string_tab[51]
+#define __pyx_n_u_projector __pyx_string_tab[52]
+#define __pyx_n_u_pygame __pyx_string_tab[53]
+#define __pyx_n_u_qualname __pyx_string_tab[54]
+#define __pyx_n_u_r __pyx_string_tab[55]
+#define __pyx_n_u_range __pyx_string_tab[56]
+#define __pyx_n_u_read __pyx_string_tab[57]
+#define __pyx_kp_u_resources_textures_blocks __pyx_string_tab[58]
+#define __pyx_n_u_saves __pyx_string_tab[59]
+#define __pyx_kp_u_saves_world_0_strings_spawn_wstr __pyx_string_tab[60]
+#define __pyx_n_u_saves_world_0_strings_string __pyx_string_tab[61]
+#define __pyx_kp_u_saves_world_0_strings_string_py __pyx_string_tab[62]
+#define __pyx_n_u_scale __pyx_string_tab[63]
+#define __pyx_n_u_set_mode __pyx_string_tab[64]
+#define __pyx_n_u_set_name __pyx_string_tab[65]
+#define __pyx_n_u_spec __pyx_string_tab[66]
+#define __pyx_n_u_splitext __pyx_string_tab[67]
+#define __pyx_n_u_string __pyx_string_tab[68]
+#define __pyx_n_u_string_filepath __pyx_string_tab[69]
+#define __pyx_n_u_stringfile __pyx_string_tab[70]
+#define __pyx_n_u_strings __pyx_string_tab[71]
+#define __pyx_n_u_sys __pyx_string_tab[72]
+#define __pyx_n_u_terrainproject __pyx_string_tab[73]
+#define __pyx_n_u_test __pyx_string_tab[74]
+#define __pyx_n_u_texture __pyx_string_tab[75]
+#define __pyx_n_u_texture_name __pyx_string_tab[76]
+#define __pyx_n_u_texture_path __pyx_string_tab[77]
+#define __pyx_n_u_textures_blocks __pyx_string_tab[78]
+#define __pyx_n_u_tileind __pyx_string_tab[79]
+#define __pyx_n_u_tileindicator __pyx_string_tab[80]
+#define __pyx_n_u_tileposx __pyx_string_tab[81]
+#define __pyx_n_u_tileposy __pyx_string_tab[82]
+#define __pyx_n_u_tilesize __pyx_string_tab[83]
+#define __pyx_n_u_tilestring __pyx_string_tab[84]
+#define __pyx_n_u_tilestringcalculate __pyx_string_tab[85]
+#define __pyx_n_u_tilex __pyx_string_tab[86]
+#define __pyx_n_u_tiley __pyx_string_tab[87]
+#define __pyx_n_u_time __pyx_string_tab[88]
+#define __pyx_n_u_transform __pyx_string_tab[89]
+#define __pyx_n_u_wh __pyx_string_tab[90]
+#define __pyx_n_u_win __pyx_string_tab[91]
+#define __pyx_n_u_world_0 __pyx_string_tab[92]
+#define __pyx_n_u_world_height __pyx_string_tab[93]
+#define __pyx_n_u_world_width __pyx_string_tab[94]
+#define __pyx_n_u_ww __pyx_string_tab[95]
+#define __pyx_n_u_xpos __pyx_string_tab[96]
+#define __pyx_n_u_xposp __pyx_string_tab[97]
+#define __pyx_n_u_ypos __pyx_string_tab[98]
+#define __pyx_n_u_yposp __pyx_string_tab[99]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2560,9 +2609,9 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   __Pyx_State_RemoveModule(NULL);
   #endif
-  for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<3; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
   for (int i=0; i<5; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<93; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<100; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   Py_CLEAR(clear_module_state->__pyx_int_0);
   Py_CLEAR(clear_module_state->__pyx_int_1);
   Py_CLEAR(clear_module_state->__pyx_int_2);
@@ -2593,9 +2642,9 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   #ifdef __Pyx_FusedFunction_USED
   Py_VISIT(traverse_module_state->__pyx_FusedFunctionType);
   #endif
-  for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<3; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
   for (int i=0; i<5; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<93; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<100; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_0);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_1);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_2);
@@ -2612,9 +2661,9 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
 /* #### Code section: module_code ### */
 
 /* "cyfunctions.pyx":21
- * #LAND OF THE FREE MIND
+ * world_height = 32
  * 
- * def load_textures(folder,scale):             # <<<<<<<<<<<<<<
+ * def load_textures(folder,scale): #Loads the textures from the specified folder and scales them             # <<<<<<<<<<<<<<
  *     for filename in os.listdir(folder):
  *         if filename.endswith(".png")or filename.endswith(".jpg"):
 */
@@ -2738,7 +2787,7 @@ static PyObject *__pyx_pf_11cyfunctions_load_textures(CYTHON_UNUSED PyObject *__
 
   /* "cyfunctions.pyx":22
  * 
- * def load_textures(folder,scale):
+ * def load_textures(folder,scale): #Loads the textures from the specified folder and scales them
  *     for filename in os.listdir(folder):             # <<<<<<<<<<<<<<
  *         if filename.endswith(".png")or filename.endswith(".jpg"):
  *             texture_path = os.path.join(folder, filename)
@@ -2823,7 +2872,7 @@ static PyObject *__pyx_pf_11cyfunctions_load_textures(CYTHON_UNUSED PyObject *__
     __pyx_t_1 = 0;
 
     /* "cyfunctions.pyx":23
- * def load_textures(folder,scale):
+ * def load_textures(folder,scale): #Loads the textures from the specified folder and scales them
  *     for filename in os.listdir(folder):
  *         if filename.endswith(".png")or filename.endswith(".jpg"):             # <<<<<<<<<<<<<<
  *             texture_path = os.path.join(folder, filename)
@@ -3003,7 +3052,7 @@ static PyObject *__pyx_pf_11cyfunctions_load_textures(CYTHON_UNUSED PyObject *__
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
       /* "cyfunctions.pyx":23
- * def load_textures(folder,scale):
+ * def load_textures(folder,scale): #Loads the textures from the specified folder and scales them
  *     for filename in os.listdir(folder):
  *         if filename.endswith(".png")or filename.endswith(".jpg"):             # <<<<<<<<<<<<<<
  *             texture_path = os.path.join(folder, filename)
@@ -3013,7 +3062,7 @@ static PyObject *__pyx_pf_11cyfunctions_load_textures(CYTHON_UNUSED PyObject *__
 
     /* "cyfunctions.pyx":22
  * 
- * def load_textures(folder,scale):
+ * def load_textures(folder,scale): #Loads the textures from the specified folder and scales them
  *     for filename in os.listdir(folder):             # <<<<<<<<<<<<<<
  *         if filename.endswith(".png")or filename.endswith(".jpg"):
  *             texture_path = os.path.join(folder, filename)
@@ -3022,9 +3071,9 @@ static PyObject *__pyx_pf_11cyfunctions_load_textures(CYTHON_UNUSED PyObject *__
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "cyfunctions.pyx":21
- * #LAND OF THE FREE MIND
+ * world_height = 32
  * 
- * def load_textures(folder,scale):             # <<<<<<<<<<<<<<
+ * def load_textures(folder,scale): #Loads the textures from the specified folder and scales them             # <<<<<<<<<<<<<<
  *     for filename in os.listdir(folder):
  *         if filename.endswith(".png")or filename.endswith(".jpg"):
 */
@@ -3055,7 +3104,7 @@ static PyObject *__pyx_pf_11cyfunctions_load_textures(CYTHON_UNUSED PyObject *__
 /* "cyfunctions.pyx":30
  * 
  * 
- * def projector(texture, xpos,ypos,scale):             # <<<<<<<<<<<<<<
+ * def projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale             # <<<<<<<<<<<<<<
  *     xposp=((ww/2)+(xpos*scale))
  *     yposp=((wh/2)+(ypos*scale))
 */
@@ -3187,7 +3236,7 @@ static PyObject *__pyx_pf_11cyfunctions_2projector(CYTHON_UNUSED PyObject *__pyx
 
   /* "cyfunctions.pyx":31
  * 
- * def projector(texture, xpos,ypos,scale):
+ * def projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale
  *     xposp=((ww/2)+(xpos*scale))             # <<<<<<<<<<<<<<
  *     yposp=((wh/2)+(ypos*scale))
  *     win.blit(textures_blocks[texture],(xposp,yposp))
@@ -3207,7 +3256,7 @@ static PyObject *__pyx_pf_11cyfunctions_2projector(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_3 = 0;
 
   /* "cyfunctions.pyx":32
- * def projector(texture, xpos,ypos,scale):
+ * def projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale
  *     xposp=((ww/2)+(xpos*scale))
  *     yposp=((wh/2)+(ypos*scale))             # <<<<<<<<<<<<<<
  *     win.blit(textures_blocks[texture],(xposp,yposp))
@@ -3232,7 +3281,7 @@ static PyObject *__pyx_pf_11cyfunctions_2projector(CYTHON_UNUSED PyObject *__pyx
  *     yposp=((wh/2)+(ypos*scale))
  *     win.blit(textures_blocks[texture],(xposp,yposp))             # <<<<<<<<<<<<<<
  * 
- * def terrainproject(plx,ply,scale):
+ * def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string
 */
   __pyx_t_3 = NULL;
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_win); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
@@ -3280,7 +3329,7 @@ static PyObject *__pyx_pf_11cyfunctions_2projector(CYTHON_UNUSED PyObject *__pyx
   /* "cyfunctions.pyx":30
  * 
  * 
- * def projector(texture, xpos,ypos,scale):             # <<<<<<<<<<<<<<
+ * def projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale             # <<<<<<<<<<<<<<
  *     xposp=((ww/2)+(xpos*scale))
  *     yposp=((wh/2)+(ypos*scale))
 */
@@ -3307,8 +3356,8 @@ static PyObject *__pyx_pf_11cyfunctions_2projector(CYTHON_UNUSED PyObject *__pyx
 /* "cyfunctions.pyx":35
  *     win.blit(textures_blocks[texture],(xposp,yposp))
  * 
- * def terrainproject(plx,ply,scale):             # <<<<<<<<<<<<<<
- *     string = stringfile.string
+ * def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string             # <<<<<<<<<<<<<<
+ *     string = strings
  *     for curry in range(world_height):
 */
 
@@ -3440,51 +3489,48 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
 
   /* "cyfunctions.pyx":36
  * 
- * def terrainproject(plx,ply,scale):
- *     string = stringfile.string             # <<<<<<<<<<<<<<
+ * def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string
+ *     string = strings             # <<<<<<<<<<<<<<
  *     for curry in range(world_height):
  *         for currx in range(world_width):
 */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_stringfile); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_strings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_string); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_string = __pyx_t_2;
-  __pyx_t_2 = 0;
+  __pyx_v_string = __pyx_t_1;
+  __pyx_t_1 = 0;
 
   /* "cyfunctions.pyx":37
- * def terrainproject(plx,ply,scale):
- *     string = stringfile.string
+ * def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string
+ *     string = strings
  *     for curry in range(world_height):             # <<<<<<<<<<<<<<
  *         for currx in range(world_width):
  *             tileposx=((0-plx)+(currx*tilesize))
 */
-  __pyx_t_1 = NULL;
+  __pyx_t_2 = NULL;
   __Pyx_INCREF(__pyx_builtin_range);
   __pyx_t_3 = __pyx_builtin_range; 
   __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_world_height); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_t_4};
-    __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+    PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_t_4};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
   }
-  if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
-    __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3);
+  if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+    __pyx_t_3 = __pyx_t_1; __Pyx_INCREF(__pyx_t_3);
     __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 37, __pyx_L1_error)
+    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 37, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_7 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 37, __pyx_L1_error)
   }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
     if (likely(!__pyx_t_7)) {
       if (likely(PyList_CheckExact(__pyx_t_3))) {
@@ -3495,7 +3541,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
           #endif
           if (__pyx_t_6 >= __pyx_temp) break;
         }
-        __pyx_t_2 = __Pyx_PyList_GetItemRef(__pyx_t_3, __pyx_t_6);
+        __pyx_t_1 = __Pyx_PyList_GetItemRef(__pyx_t_3, __pyx_t_6);
         ++__pyx_t_6;
       } else {
         {
@@ -3506,16 +3552,16 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
           if (__pyx_t_6 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6));
+        __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6));
         #else
-        __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_6);
+        __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_6);
         #endif
         ++__pyx_t_6;
       }
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
     } else {
-      __pyx_t_2 = __pyx_t_7(__pyx_t_3);
-      if (unlikely(!__pyx_t_2)) {
+      __pyx_t_1 = __pyx_t_7(__pyx_t_3);
+      if (unlikely(!__pyx_t_1)) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 37, __pyx_L1_error)
@@ -3524,12 +3570,12 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
         break;
       }
     }
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_XDECREF_SET(__pyx_v_curry, __pyx_t_2);
-    __pyx_t_2 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_XDECREF_SET(__pyx_v_curry, __pyx_t_1);
+    __pyx_t_1 = 0;
 
     /* "cyfunctions.pyx":38
- *     string = stringfile.string
+ *     string = strings
  *     for curry in range(world_height):
  *         for currx in range(world_width):             # <<<<<<<<<<<<<<
  *             tileposx=((0-plx)+(currx*tilesize))
@@ -3537,60 +3583,60 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
 */
     __pyx_t_4 = NULL;
     __Pyx_INCREF(__pyx_builtin_range);
-    __pyx_t_1 = __pyx_builtin_range; 
+    __pyx_t_2 = __pyx_builtin_range; 
     __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_world_width); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 38, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_5 = 1;
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_t_8};
-      __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
     }
-    if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
-      __pyx_t_1 = __pyx_t_2; __Pyx_INCREF(__pyx_t_1);
+    if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+      __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2);
       __pyx_t_9 = 0;
       __pyx_t_10 = NULL;
     } else {
-      __pyx_t_9 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_10 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 38, __pyx_L1_error)
+      __pyx_t_9 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_10 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 38, __pyx_L1_error)
     }
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     for (;;) {
       if (likely(!__pyx_t_10)) {
-        if (likely(PyList_CheckExact(__pyx_t_1))) {
+        if (likely(PyList_CheckExact(__pyx_t_2))) {
           {
-            Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
+            Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
             #if !CYTHON_ASSUME_SAFE_SIZE
             if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 38, __pyx_L1_error)
             #endif
             if (__pyx_t_9 >= __pyx_temp) break;
           }
-          __pyx_t_2 = __Pyx_PyList_GetItemRef(__pyx_t_1, __pyx_t_9);
+          __pyx_t_1 = __Pyx_PyList_GetItemRef(__pyx_t_2, __pyx_t_9);
           ++__pyx_t_9;
         } else {
           {
-            Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_1);
+            Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
             #if !CYTHON_ASSUME_SAFE_SIZE
             if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 38, __pyx_L1_error)
             #endif
             if (__pyx_t_9 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_2 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_9));
+          __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_9));
           #else
-          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_9);
+          __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_9);
           #endif
           ++__pyx_t_9;
         }
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
       } else {
-        __pyx_t_2 = __pyx_t_10(__pyx_t_1);
-        if (unlikely(!__pyx_t_2)) {
+        __pyx_t_1 = __pyx_t_10(__pyx_t_2);
+        if (unlikely(!__pyx_t_1)) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 38, __pyx_L1_error)
@@ -3599,9 +3645,9 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
           break;
         }
       }
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_XDECREF_SET(__pyx_v_currx, __pyx_t_2);
-      __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_XDECREF_SET(__pyx_v_currx, __pyx_t_1);
+      __pyx_t_1 = 0;
 
       /* "cyfunctions.pyx":39
  *     for curry in range(world_height):
@@ -3610,16 +3656,16 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
  *             tileposy=((0-ply)+(curry*tilesize))
  *             tilestring = tilestringcalculate(currx,curry,string)
 */
-      __pyx_t_2 = __Pyx_PyLong_SubtractCObj(__pyx_mstate_global->__pyx_int_0, __pyx_v_plx, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_1 = __Pyx_PyLong_SubtractCObj(__pyx_mstate_global->__pyx_int_0, __pyx_v_plx, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_tilesize); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 39, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __pyx_t_4 = PyNumber_Multiply(__pyx_v_currx, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 39, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = PyNumber_Add(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 39, __pyx_L1_error)
+      __pyx_t_8 = PyNumber_Add(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 39, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_XDECREF_SET(__pyx_v_tileposx, __pyx_t_8);
       __pyx_t_8 = 0;
@@ -3635,13 +3681,13 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_tilesize); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_2 = PyNumber_Multiply(__pyx_v_curry, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_1 = PyNumber_Multiply(__pyx_v_curry, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Add(__pyx_t_8, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_Add(__pyx_t_8, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_XDECREF_SET(__pyx_v_tileposy, __pyx_t_4);
       __pyx_t_4 = 0;
 
@@ -3652,25 +3698,25 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
  *             if tilestring in textures_blocks:
  *                 projector(tilestring,tileposx,tileposy,scale)
 */
-      __pyx_t_2 = NULL;
+      __pyx_t_1 = NULL;
       __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_tilestringcalculate); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 41, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __pyx_t_5 = 1;
       #if CYTHON_UNPACK_METHODS
       if (unlikely(PyMethod_Check(__pyx_t_8))) {
-        __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_8);
-        assert(__pyx_t_2);
+        __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_8);
+        assert(__pyx_t_1);
         PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_8);
-        __Pyx_INCREF(__pyx_t_2);
+        __Pyx_INCREF(__pyx_t_1);
         __Pyx_INCREF(__pyx__function);
         __Pyx_DECREF_SET(__pyx_t_8, __pyx__function);
         __pyx_t_5 = 0;
       }
       #endif
       {
-        PyObject *__pyx_callargs[4] = {__pyx_t_2, __pyx_v_currx, __pyx_v_curry, __pyx_v_string};
+        PyObject *__pyx_callargs[4] = {__pyx_t_1, __pyx_v_currx, __pyx_v_curry, __pyx_v_string};
         __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_5, (4-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-        __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
@@ -3699,25 +3745,25 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
  *                 projector("default",tileposx,tileposy,scale)
 */
         __pyx_t_8 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_projector); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_projector); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
         __pyx_t_5 = 1;
         #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_2))) {
-          __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
+        if (unlikely(PyMethod_Check(__pyx_t_1))) {
+          __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_1);
           assert(__pyx_t_8);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_2);
+          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_1);
           __Pyx_INCREF(__pyx_t_8);
           __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_2, __pyx__function);
+          __Pyx_DECREF_SET(__pyx_t_1, __pyx__function);
           __pyx_t_5 = 0;
         }
         #endif
         {
           PyObject *__pyx_callargs[5] = {__pyx_t_8, __pyx_v_tilestring, __pyx_v_tileposx, __pyx_v_tileposy, __pyx_v_scale};
-          __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+__pyx_t_5, (5-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+__pyx_t_5, (5-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
         }
@@ -3738,28 +3784,28 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
  *             else:
  *                 projector("default",tileposx,tileposy,scale)             # <<<<<<<<<<<<<<
  * 
- * def tilestringcalculate(currx,curry,string):
+ * def tilestringcalculate(currx,curry,string): #Calculates the string for the tile based on the worldstring and its neighbours
 */
       /*else*/ {
-        __pyx_t_2 = NULL;
+        __pyx_t_1 = NULL;
         __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_projector); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 45, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_t_5 = 1;
         #if CYTHON_UNPACK_METHODS
         if (unlikely(PyMethod_Check(__pyx_t_8))) {
-          __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_8);
-          assert(__pyx_t_2);
+          __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_8);
+          assert(__pyx_t_1);
           PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_8);
-          __Pyx_INCREF(__pyx_t_2);
+          __Pyx_INCREF(__pyx_t_1);
           __Pyx_INCREF(__pyx__function);
           __Pyx_DECREF_SET(__pyx_t_8, __pyx__function);
           __pyx_t_5 = 0;
         }
         #endif
         {
-          PyObject *__pyx_callargs[5] = {__pyx_t_2, __pyx_mstate_global->__pyx_n_u_default, __pyx_v_tileposx, __pyx_v_tileposy, __pyx_v_scale};
+          PyObject *__pyx_callargs[5] = {__pyx_t_1, __pyx_mstate_global->__pyx_n_u_default, __pyx_v_tileposx, __pyx_v_tileposy, __pyx_v_scale};
           __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_5, (5-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 45, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
@@ -3769,18 +3815,18 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
       __pyx_L7:;
 
       /* "cyfunctions.pyx":38
- *     string = stringfile.string
+ *     string = strings
  *     for curry in range(world_height):
  *         for currx in range(world_width):             # <<<<<<<<<<<<<<
  *             tileposx=((0-plx)+(currx*tilesize))
  *             tileposy=((0-ply)+(curry*tilesize))
 */
     }
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
     /* "cyfunctions.pyx":37
- * def terrainproject(plx,ply,scale):
- *     string = stringfile.string
+ * def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string
+ *     string = strings
  *     for curry in range(world_height):             # <<<<<<<<<<<<<<
  *         for currx in range(world_width):
  *             tileposx=((0-plx)+(currx*tilesize))
@@ -3791,8 +3837,8 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
   /* "cyfunctions.pyx":35
  *     win.blit(textures_blocks[texture],(xposp,yposp))
  * 
- * def terrainproject(plx,ply,scale):             # <<<<<<<<<<<<<<
- *     string = stringfile.string
+ * def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string             # <<<<<<<<<<<<<<
+ *     string = strings
  *     for curry in range(world_height):
 */
 
@@ -3822,7 +3868,7 @@ static PyObject *__pyx_pf_11cyfunctions_4terrainproject(CYTHON_UNUSED PyObject *
 /* "cyfunctions.pyx":47
  *                 projector("default",tileposx,tileposy,scale)
  * 
- * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
+ * def tilestringcalculate(currx,curry,string): #Calculates the string for the tile based on the worldstring and its neighbours             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
 */
@@ -3949,7 +3995,7 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
 
   /* "cyfunctions.pyx":48
  * 
- * def tilestringcalculate(currx,curry,string):
+ * def tilestringcalculate(currx,curry,string): #Calculates the string for the tile based on the worldstring and its neighbours
  *     currtile=((world_width*(curry+1))+currx)             # <<<<<<<<<<<<<<
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
  *     tilestring=string[((currtile*5)+1)]
@@ -3969,7 +4015,7 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
   __pyx_t_2 = 0;
 
   /* "cyfunctions.pyx":49
- * def tilestringcalculate(currx,curry,string):
+ * def tilestringcalculate(currx,curry,string): #Calculates the string for the tile based on the worldstring and its neighbours
  *     currtile=((world_width*(curry+1))+currx)
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]             # <<<<<<<<<<<<<<
  *     tilestring=string[((currtile*5)+1)]
@@ -4181,7 +4227,7 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
  *             tilestring+="b"
  *     return(tilestring)             # <<<<<<<<<<<<<<
  * 
- * def tileind(plx,ply,msx,msy,scale):
+ * def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
 */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_tilestring);
@@ -4191,7 +4237,7 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
   /* "cyfunctions.pyx":47
  *                 projector("default",tileposx,tileposy,scale)
  * 
- * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
+ * def tilestringcalculate(currx,curry,string): #Calculates the string for the tile based on the worldstring and its neighbours             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
 */
@@ -4218,7 +4264,7 @@ static PyObject *__pyx_pf_11cyfunctions_6tilestringcalculate(CYTHON_UNUSED PyObj
 /* "cyfunctions.pyx":60
  *     return(tilestring)
  * 
- * def tileind(plx,ply,msx,msy,scale):             # <<<<<<<<<<<<<<
+ * def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor             # <<<<<<<<<<<<<<
  *     indtx=((0-plx)+((math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))*tilesize))
  *     indty=((0-ply)+((math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))*tilesize))
 */
@@ -4362,7 +4408,7 @@ static PyObject *__pyx_pf_11cyfunctions_8tileind(CYTHON_UNUSED PyObject *__pyx_s
 
   /* "cyfunctions.pyx":61
  * 
- * def tileind(plx,ply,msx,msy,scale):
+ * def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
  *     indtx=((0-plx)+((math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))*tilesize))             # <<<<<<<<<<<<<<
  *     indty=((0-ply)+((math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))*tilesize))
  *     tilex=(math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))
@@ -4430,7 +4476,7 @@ static PyObject *__pyx_pf_11cyfunctions_8tileind(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
 
   /* "cyfunctions.pyx":62
- * def tileind(plx,ply,msx,msy,scale):
+ * def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
  *     indtx=((0-plx)+((math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))*tilesize))
  *     indty=((0-ply)+((math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))*tilesize))             # <<<<<<<<<<<<<<
  *     tilex=(math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))
@@ -4685,7 +4731,7 @@ static PyObject *__pyx_pf_11cyfunctions_8tileind(CYTHON_UNUSED PyObject *__pyx_s
   /* "cyfunctions.pyx":60
  *     return(tilestring)
  * 
- * def tileind(plx,ply,msx,msy,scale):             # <<<<<<<<<<<<<<
+ * def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor             # <<<<<<<<<<<<<<
  *     indtx=((0-plx)+((math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))*tilesize))
  *     indty=((0-ply)+((math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))*tilesize))
 */
@@ -4972,9 +5018,15 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_cyfunctions(PyObject *__pyx_pyinit
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
+  size_t __pyx_t_6;
   PyObject *__pyx_t_7 = NULL;
-  size_t __pyx_t_8;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  int __pyx_t_11;
+  int __pyx_t_12;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -5128,54 +5180,199 @@ __Pyx_RefNannySetupContext("PyInit_cyfunctions", 0);
  * import pygame, sys, time ,math, os, cyfunctions
  * #import saves.world_0.strings.string as string
  * import saves.world_0.strings.string as stringfile             # <<<<<<<<<<<<<<
- * 
- * folder_texture_blocks = "resources/textures/blocks"
+ * with open("saves/world_0/strings/spawn.wstr", "r") as f:
+ *     strings = f.read()
 */
   __pyx_t_2 = __Pyx_ImportDottedModule(__pyx_mstate_global->__pyx_n_u_saves_world_0_strings_string, __pyx_mstate_global->__pyx_tuple[0]); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_stringfile, __pyx_t_2) < 0) __PYX_ERR(0, 5, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cyfunctions.pyx":7
+  /* "cyfunctions.pyx":6
+ * #import saves.world_0.strings.string as string
  * import saves.world_0.strings.string as stringfile
+ * with open("saves/world_0/strings/spawn.wstr", "r") as f:             # <<<<<<<<<<<<<<
+ *     strings = f.read()
+ * 
+*/
+  /*with:*/ {
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_mstate_global->__pyx_tuple[1], NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_exit); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_4 = NULL;
+    __pyx_t_5 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_enter); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 6, __pyx_L2_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
+      __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+__pyx_t_6, (1-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 6, __pyx_L2_error)
+      __Pyx_GOTREF(__pyx_t_3);
+    }
+    __pyx_t_5 = __pyx_t_3;
+    __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    /*try:*/ {
+      {
+        __Pyx_PyThreadState_declare
+        __Pyx_PyThreadState_assign
+        __Pyx_ExceptionSave(&__pyx_t_7, &__pyx_t_8, &__pyx_t_9);
+        __Pyx_XGOTREF(__pyx_t_7);
+        __Pyx_XGOTREF(__pyx_t_8);
+        __Pyx_XGOTREF(__pyx_t_9);
+        /*try:*/ {
+          if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_f, __pyx_t_5) < 0) __PYX_ERR(0, 6, __pyx_L6_error)
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+          /* "cyfunctions.pyx":7
+ * import saves.world_0.strings.string as stringfile
+ * with open("saves/world_0/strings/spawn.wstr", "r") as f:
+ *     strings = f.read()             # <<<<<<<<<<<<<<
+ * 
+ * folder_texture_blocks = "resources/textures/blocks"
+*/
+          __pyx_t_2 = NULL;
+          __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_f); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 7, __pyx_L6_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_read); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 7, __pyx_L6_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          __pyx_t_6 = 1;
+          {
+            PyObject *__pyx_callargs[2] = {__pyx_t_2, NULL};
+            __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+__pyx_t_6, (1-__pyx_t_6) | (__pyx_t_6*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+            __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+            if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 7, __pyx_L6_error)
+            __Pyx_GOTREF(__pyx_t_5);
+          }
+          if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_strings, __pyx_t_5) < 0) __PYX_ERR(0, 7, __pyx_L6_error)
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+          /* "cyfunctions.pyx":6
+ * #import saves.world_0.strings.string as string
+ * import saves.world_0.strings.string as stringfile
+ * with open("saves/world_0/strings/spawn.wstr", "r") as f:             # <<<<<<<<<<<<<<
+ *     strings = f.read()
+ * 
+*/
+        }
+        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+        goto __pyx_L11_try_end;
+        __pyx_L6_error:;
+        __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+        /*except:*/ {
+          __Pyx_AddTraceback("cyfunctions", __pyx_clineno, __pyx_lineno, __pyx_filename);
+          if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_4, &__pyx_t_2) < 0) __PYX_ERR(0, 6, __pyx_L8_except_error)
+          __Pyx_XGOTREF(__pyx_t_5);
+          __Pyx_XGOTREF(__pyx_t_4);
+          __Pyx_XGOTREF(__pyx_t_2);
+          __pyx_t_3 = PyTuple_Pack(3, __pyx_t_5, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 6, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, NULL);
+          __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 6, __pyx_L8_except_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_t_10);
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          if (__pyx_t_11 < 0) __PYX_ERR(0, 6, __pyx_L8_except_error)
+          __pyx_t_12 = (!__pyx_t_11);
+          if (unlikely(__pyx_t_12)) {
+            __Pyx_GIVEREF(__pyx_t_5);
+            __Pyx_GIVEREF(__pyx_t_4);
+            __Pyx_XGIVEREF(__pyx_t_2);
+            __Pyx_ErrRestoreWithState(__pyx_t_5, __pyx_t_4, __pyx_t_2);
+            __pyx_t_5 = 0;  __pyx_t_4 = 0;  __pyx_t_2 = 0; 
+            __PYX_ERR(0, 6, __pyx_L8_except_error)
+          }
+          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+          __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+          goto __pyx_L7_exception_handled;
+        }
+        __pyx_L8_except_error:;
+        __Pyx_XGIVEREF(__pyx_t_7);
+        __Pyx_XGIVEREF(__pyx_t_8);
+        __Pyx_XGIVEREF(__pyx_t_9);
+        __Pyx_ExceptionReset(__pyx_t_7, __pyx_t_8, __pyx_t_9);
+        goto __pyx_L1_error;
+        __pyx_L7_exception_handled:;
+        __Pyx_XGIVEREF(__pyx_t_7);
+        __Pyx_XGIVEREF(__pyx_t_8);
+        __Pyx_XGIVEREF(__pyx_t_9);
+        __Pyx_ExceptionReset(__pyx_t_7, __pyx_t_8, __pyx_t_9);
+        __pyx_L11_try_end:;
+      }
+    }
+    /*finally:*/ {
+      /*normal exit:*/{
+        if (__pyx_t_1) {
+          __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_mstate_global->__pyx_tuple[2], NULL);
+          __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 6, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        }
+        goto __pyx_L5;
+      }
+      __pyx_L5:;
+    }
+    goto __pyx_L15;
+    __pyx_L2_error:;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    goto __pyx_L1_error;
+    __pyx_L15:;
+  }
+
+  /* "cyfunctions.pyx":9
+ *     strings = f.read()
  * 
  * folder_texture_blocks = "resources/textures/blocks"             # <<<<<<<<<<<<<<
  * string_filepath = "saves/world_0/strings/string.py"
  * textures_blocks = {}
 */
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_folder_texture_blocks, __pyx_mstate_global->__pyx_kp_u_resources_textures_blocks) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_folder_texture_blocks, __pyx_mstate_global->__pyx_kp_u_resources_textures_blocks) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
 
-  /* "cyfunctions.pyx":8
+  /* "cyfunctions.pyx":10
  * 
  * folder_texture_blocks = "resources/textures/blocks"
  * string_filepath = "saves/world_0/strings/string.py"             # <<<<<<<<<<<<<<
  * textures_blocks = {}
  * 
 */
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_string_filepath, __pyx_mstate_global->__pyx_kp_u_saves_world_0_strings_string_py) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_string_filepath, __pyx_mstate_global->__pyx_kp_u_saves_world_0_strings_string_py) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
 
-  /* "cyfunctions.pyx":9
+  /* "cyfunctions.pyx":11
  * folder_texture_blocks = "resources/textures/blocks"
  * string_filepath = "saves/world_0/strings/string.py"
  * textures_blocks = {}             # <<<<<<<<<<<<<<
  * 
  * tilesize = 8
 */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 11, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_textures_blocks, __pyx_t_2) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_textures_blocks, __pyx_t_2) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cyfunctions.pyx":11
+  /* "cyfunctions.pyx":13
  * textures_blocks = {}
  * 
  * tilesize = 8             # <<<<<<<<<<<<<<
  * ww, wh = 1854, 1010
  * 
 */
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_tilesize, __pyx_mstate_global->__pyx_int_8) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_tilesize, __pyx_mstate_global->__pyx_int_8) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
 
-  /* "cyfunctions.pyx":12
+  /* "cyfunctions.pyx":14
  * 
  * tilesize = 8
  * ww, wh = 1854, 1010             # <<<<<<<<<<<<<<
@@ -5184,135 +5381,135 @@ __Pyx_RefNannySetupContext("PyInit_cyfunctions", 0);
 */
   __pyx_t_2 = __pyx_mstate_global->__pyx_int_1854;
   __Pyx_INCREF(__pyx_t_2);
-  __pyx_t_3 = __pyx_mstate_global->__pyx_int_1010;
-  __Pyx_INCREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_ww, __pyx_t_2) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_4 = __pyx_mstate_global->__pyx_int_1010;
+  __Pyx_INCREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_ww, __pyx_t_2) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_wh, __pyx_t_3) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_wh, __pyx_t_4) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "cyfunctions.pyx":14
+  /* "cyfunctions.pyx":16
  * ww, wh = 1854, 1010
  * 
  * win = pygame.display.set_mode((ww,wh))             # <<<<<<<<<<<<<<
  * 
  * world_width = 32
 */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_pygame); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 14, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_display); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 14, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_pygame); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_2 = __pyx_t_5;
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_display); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_2 = __pyx_t_3;
   __Pyx_INCREF(__pyx_t_2);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_ww); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 14, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_wh); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 14, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyTuple_Pack(2, __pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 14, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_8 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_ww); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_wh); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = PyTuple_Pack(2, __pyx_t_5, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_6 = 0;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_t_7};
-    __pyx_t_3 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_set_mode, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_t_14};
+    __pyx_t_4 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_set_mode, __pyx_callargs+__pyx_t_6, (2-__pyx_t_6) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 14, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 16, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
   }
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_win, __pyx_t_3) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_win, __pyx_t_4) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "cyfunctions.pyx":16
+  /* "cyfunctions.pyx":18
  * win = pygame.display.set_mode((ww,wh))
  * 
  * world_width = 32             # <<<<<<<<<<<<<<
  * world_height = 32
  * 
 */
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_world_width, __pyx_mstate_global->__pyx_int_32) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_world_width, __pyx_mstate_global->__pyx_int_32) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
 
-  /* "cyfunctions.pyx":17
+  /* "cyfunctions.pyx":19
  * 
  * world_width = 32
  * world_height = 32             # <<<<<<<<<<<<<<
  * 
- * #LAND OF THE FREE MIND
+ * def load_textures(folder,scale): #Loads the textures from the specified folder and scales them
 */
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_world_height, __pyx_mstate_global->__pyx_int_32) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_world_height, __pyx_mstate_global->__pyx_int_32) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
 
   /* "cyfunctions.pyx":21
- * #LAND OF THE FREE MIND
+ * world_height = 32
  * 
- * def load_textures(folder,scale):             # <<<<<<<<<<<<<<
+ * def load_textures(folder,scale): #Loads the textures from the specified folder and scales them             # <<<<<<<<<<<<<<
  *     for filename in os.listdir(folder):
  *         if filename.endswith(".png")or filename.endswith(".jpg"):
 */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_1load_textures, 0, __pyx_mstate_global->__pyx_n_u_load_textures, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_load_textures, __pyx_t_3) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_1load_textures, 0, __pyx_mstate_global->__pyx_n_u_load_textures, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 21, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_load_textures, __pyx_t_4) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "cyfunctions.pyx":30
  * 
  * 
- * def projector(texture, xpos,ypos,scale):             # <<<<<<<<<<<<<<
+ * def projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale             # <<<<<<<<<<<<<<
  *     xposp=((ww/2)+(xpos*scale))
  *     yposp=((wh/2)+(ypos*scale))
 */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_3projector, 0, __pyx_mstate_global->__pyx_n_u_projector, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 30, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_projector, __pyx_t_3) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_3projector, 0, __pyx_mstate_global->__pyx_n_u_projector, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_projector, __pyx_t_4) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "cyfunctions.pyx":35
  *     win.blit(textures_blocks[texture],(xposp,yposp))
  * 
- * def terrainproject(plx,ply,scale):             # <<<<<<<<<<<<<<
- *     string = stringfile.string
+ * def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string             # <<<<<<<<<<<<<<
+ *     string = strings
  *     for curry in range(world_height):
 */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_5terrainproject, 0, __pyx_mstate_global->__pyx_n_u_terrainproject, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_terrainproject, __pyx_t_3) < 0) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_5terrainproject, 0, __pyx_mstate_global->__pyx_n_u_terrainproject, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_terrainproject, __pyx_t_4) < 0) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "cyfunctions.pyx":47
  *                 projector("default",tileposx,tileposy,scale)
  * 
- * def tilestringcalculate(currx,curry,string):             # <<<<<<<<<<<<<<
+ * def tilestringcalculate(currx,curry,string): #Calculates the string for the tile based on the worldstring and its neighbours             # <<<<<<<<<<<<<<
  *     currtile=((world_width*(curry+1))+currx)
  *     indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
 */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_7tilestringcalculate, 0, __pyx_mstate_global->__pyx_n_u_tilestringcalculate, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 47, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_tilestringcalculate, __pyx_t_3) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_7tilestringcalculate, 0, __pyx_mstate_global->__pyx_n_u_tilestringcalculate, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_tilestringcalculate, __pyx_t_4) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "cyfunctions.pyx":60
  *     return(tilestring)
  * 
- * def tileind(plx,ply,msx,msy,scale):             # <<<<<<<<<<<<<<
+ * def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor             # <<<<<<<<<<<<<<
  *     indtx=((0-plx)+((math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))*tilesize))
  *     indty=((0-ply)+((math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))*tilesize))
 */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_9tileind, 0, __pyx_mstate_global->__pyx_n_u_tileind, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_tileind, __pyx_t_3) < 0) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_11cyfunctions_9tileind, 0, __pyx_mstate_global->__pyx_n_u_tileind, NULL, __pyx_mstate_global->__pyx_n_u_cyfunctions, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_tileind, __pyx_t_4) < 0) __PYX_ERR(0, 60, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "cyfunctions.pyx":1
  * # game_logic.pyx             # <<<<<<<<<<<<<<
  * import functions as fun
  * import pygame, sys, time ,math, os, cyfunctions
 */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_4) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /*--- Wrapped vars code ---*/
 
@@ -5322,8 +5519,8 @@ __Pyx_RefNannySetupContext("PyInit_cyfunctions", 0);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
       __Pyx_AddTraceback("init cyfunctions", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -5354,11 +5551,11 @@ __Pyx_RefNannySetupContext("PyInit_cyfunctions", 0);
 
 typedef struct {
     const char *s;
-#if 31 <= 65535
+#if 32 <= 65535
     const unsigned short n;
-#elif 31 / 2 < INT_MAX
+#elif 32 / 2 < INT_MAX
     const unsigned int n;
-#elif 31 / 2 < LONG_MAX
+#elif 32 / 2 < LONG_MAX
     const unsigned long n;
 #else
     const Py_ssize_t n;
@@ -5394,6 +5591,9 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_default, sizeof(__pyx_k_default), 0, 1, 1}, /* PyObject cname: __pyx_n_u_default */
   {__pyx_k_display, sizeof(__pyx_k_display), 0, 1, 1}, /* PyObject cname: __pyx_n_u_display */
   {__pyx_k_endswith, sizeof(__pyx_k_endswith), 0, 1, 1}, /* PyObject cname: __pyx_n_u_endswith */
+  {__pyx_k_enter, sizeof(__pyx_k_enter), 0, 1, 1}, /* PyObject cname: __pyx_n_u_enter */
+  {__pyx_k_exit, sizeof(__pyx_k_exit), 0, 1, 1}, /* PyObject cname: __pyx_n_u_exit */
+  {__pyx_k_f, sizeof(__pyx_k_f), 0, 1, 1}, /* PyObject cname: __pyx_n_u_f */
   {__pyx_k_filename, sizeof(__pyx_k_filename), 0, 1, 1}, /* PyObject cname: __pyx_n_u_filename */
   {__pyx_k_floor, sizeof(__pyx_k_floor), 0, 1, 1}, /* PyObject cname: __pyx_n_u_floor */
   {__pyx_k_folder, sizeof(__pyx_k_folder), 0, 1, 1}, /* PyObject cname: __pyx_n_u_folder */
@@ -5418,6 +5618,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_msx, sizeof(__pyx_k_msx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_msx */
   {__pyx_k_msy, sizeof(__pyx_k_msy), 0, 1, 1}, /* PyObject cname: __pyx_n_u_msy */
   {__pyx_k_name, sizeof(__pyx_k_name), 0, 1, 1}, /* PyObject cname: __pyx_n_u_name */
+  {__pyx_k_open, sizeof(__pyx_k_open), 0, 1, 1}, /* PyObject cname: __pyx_n_u_open */
   {__pyx_k_os, sizeof(__pyx_k_os), 0, 1, 1}, /* PyObject cname: __pyx_n_u_os */
   {__pyx_k_path, sizeof(__pyx_k_path), 0, 1, 1}, /* PyObject cname: __pyx_n_u_path */
   {__pyx_k_plx, sizeof(__pyx_k_plx), 0, 1, 1}, /* PyObject cname: __pyx_n_u_plx */
@@ -5428,9 +5629,12 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_projector, sizeof(__pyx_k_projector), 0, 1, 1}, /* PyObject cname: __pyx_n_u_projector */
   {__pyx_k_pygame, sizeof(__pyx_k_pygame), 0, 1, 1}, /* PyObject cname: __pyx_n_u_pygame */
   {__pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 1, 1}, /* PyObject cname: __pyx_n_u_qualname */
+  {__pyx_k_r, sizeof(__pyx_k_r), 0, 1, 1}, /* PyObject cname: __pyx_n_u_r */
   {__pyx_k_range, sizeof(__pyx_k_range), 0, 1, 1}, /* PyObject cname: __pyx_n_u_range */
+  {__pyx_k_read, sizeof(__pyx_k_read), 0, 1, 1}, /* PyObject cname: __pyx_n_u_read */
   {__pyx_k_resources_textures_blocks, sizeof(__pyx_k_resources_textures_blocks), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_resources_textures_blocks */
   {__pyx_k_saves, sizeof(__pyx_k_saves), 0, 1, 1}, /* PyObject cname: __pyx_n_u_saves */
+  {__pyx_k_saves_world_0_strings_spawn_wstr, sizeof(__pyx_k_saves_world_0_strings_spawn_wstr), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_saves_world_0_strings_spawn_wstr */
   {__pyx_k_saves_world_0_strings_string, sizeof(__pyx_k_saves_world_0_strings_string), 0, 1, 1}, /* PyObject cname: __pyx_n_u_saves_world_0_strings_string */
   {__pyx_k_saves_world_0_strings_string_py, sizeof(__pyx_k_saves_world_0_strings_string_py), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_saves_world_0_strings_string_py */
   {__pyx_k_scale, sizeof(__pyx_k_scale), 0, 1, 1}, /* PyObject cname: __pyx_n_u_scale */
@@ -5479,6 +5683,7 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry const *t, PyObject **target, c
 
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
+  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_open); if (!__pyx_builtin_open) __PYX_ERR(0, 6, __pyx_L1_error)
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_range); if (!__pyx_builtin_range) __PYX_ERR(0, 37, __pyx_L1_error)
   __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_print); if (!__pyx_builtin_print) __PYX_ERR(0, 65, __pyx_L1_error)
   return 0;
@@ -5496,12 +5701,26 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
  * import pygame, sys, time ,math, os, cyfunctions
  * #import saves.world_0.strings.string as string
  * import saves.world_0.strings.string as stringfile             # <<<<<<<<<<<<<<
- * 
- * folder_texture_blocks = "resources/textures/blocks"
+ * with open("saves/world_0/strings/spawn.wstr", "r") as f:
+ *     strings = f.read()
 */
   __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(4, __pyx_mstate_global->__pyx_n_u_saves, __pyx_mstate_global->__pyx_n_u_world_0, __pyx_mstate_global->__pyx_n_u_strings, __pyx_mstate_global->__pyx_n_u_string); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[0]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[0]);
+
+  /* "cyfunctions.pyx":6
+ * #import saves.world_0.strings.string as string
+ * import saves.world_0.strings.string as stringfile
+ * with open("saves/world_0/strings/spawn.wstr", "r") as f:             # <<<<<<<<<<<<<<
+ *     strings = f.read()
+ * 
+*/
+  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_kp_u_saves_world_0_strings_spawn_wstr, __pyx_mstate_global->__pyx_n_u_r); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __pyx_mstate_global->__pyx_tuple[2] = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_tuple[2])) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[2]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[2]);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5565,9 +5784,9 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cyfunctions_pyx, __pyx_mstate->__pyx_n_u_projector, __pyx_k_Bar_4q_Bar_4q_uA_AZvQ, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 9, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 35, 114};
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 9, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 35, 112};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_plx, __pyx_mstate->__pyx_n_u_ply, __pyx_mstate->__pyx_n_u_scale, __pyx_mstate->__pyx_n_u_string, __pyx_mstate->__pyx_n_u_curry, __pyx_mstate->__pyx_n_u_currx, __pyx_mstate->__pyx_n_u_tileposx, __pyx_mstate->__pyx_n_u_tileposy, __pyx_mstate->__pyx_n_u_tilestring};
-    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cyfunctions_pyx, __pyx_mstate->__pyx_n_u_terrainproject, __pyx_k_Zq_aq_IU_1_q_RuAQ_q_RuAQ_AV6_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cyfunctions_pyx, __pyx_mstate->__pyx_n_u_terrainproject, __pyx_k_Q_aq_IU_1_q_RuAQ_q_RuAQ_AV6_Q_Y, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 47, 171};
@@ -7807,6 +8026,211 @@ static PyObject *__Pyx_ImportDottedModule(PyObject *name, PyObject *parts_tuple)
     }
 #endif
     return __Pyx__ImportDottedModule(name, parts_tuple);
+}
+
+/* PyObjectLookupSpecial */
+#if CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx__PyObject_LookupSpecial(PyObject* obj, PyObject* attr_name, int with_error) {
+    PyObject *res;
+    PyTypeObject *tp = Py_TYPE(obj);
+    res = _PyType_Lookup(tp, attr_name);
+    if (likely(res)) {
+        descrgetfunc f = Py_TYPE(res)->tp_descr_get;
+        if (!f) {
+            Py_INCREF(res);
+        } else {
+            res = f(res, obj, (PyObject *)tp);
+        }
+    } else if (with_error) {
+        PyErr_SetObject(PyExc_AttributeError, attr_name);
+    }
+    return res;
+}
+#endif
+
+/* GetTopmostException */
+#if CYTHON_USE_EXC_INFO_STACK && CYTHON_FAST_THREAD_STATE
+static _PyErr_StackItem *
+__Pyx_PyErr_GetTopmostException(PyThreadState *tstate)
+{
+    _PyErr_StackItem *exc_info = tstate->exc_info;
+    while ((exc_info->exc_value == NULL || exc_info->exc_value == Py_None) &&
+           exc_info->previous_item != NULL)
+    {
+        exc_info = exc_info->previous_item;
+    }
+    return exc_info;
+}
+#endif
+
+/* SaveResetException */
+#if CYTHON_FAST_THREAD_STATE
+static CYTHON_INLINE void __Pyx__ExceptionSave(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
+  #if CYTHON_USE_EXC_INFO_STACK && PY_VERSION_HEX >= 0x030B00a4
+    _PyErr_StackItem *exc_info = __Pyx_PyErr_GetTopmostException(tstate);
+    PyObject *exc_value = exc_info->exc_value;
+    if (exc_value == NULL || exc_value == Py_None) {
+        *value = NULL;
+        *type = NULL;
+        *tb = NULL;
+    } else {
+        *value = exc_value;
+        Py_INCREF(*value);
+        *type = (PyObject*) Py_TYPE(exc_value);
+        Py_INCREF(*type);
+        *tb = PyException_GetTraceback(exc_value);
+    }
+  #elif CYTHON_USE_EXC_INFO_STACK
+    _PyErr_StackItem *exc_info = __Pyx_PyErr_GetTopmostException(tstate);
+    *type = exc_info->exc_type;
+    *value = exc_info->exc_value;
+    *tb = exc_info->exc_traceback;
+    Py_XINCREF(*type);
+    Py_XINCREF(*value);
+    Py_XINCREF(*tb);
+  #else
+    *type = tstate->exc_type;
+    *value = tstate->exc_value;
+    *tb = tstate->exc_traceback;
+    Py_XINCREF(*type);
+    Py_XINCREF(*value);
+    Py_XINCREF(*tb);
+  #endif
+}
+static CYTHON_INLINE void __Pyx__ExceptionReset(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
+  #if CYTHON_USE_EXC_INFO_STACK && PY_VERSION_HEX >= 0x030B00a4
+    _PyErr_StackItem *exc_info = tstate->exc_info;
+    PyObject *tmp_value = exc_info->exc_value;
+    exc_info->exc_value = value;
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(type);
+    Py_XDECREF(tb);
+  #else
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    #if CYTHON_USE_EXC_INFO_STACK
+    _PyErr_StackItem *exc_info = tstate->exc_info;
+    tmp_type = exc_info->exc_type;
+    tmp_value = exc_info->exc_value;
+    tmp_tb = exc_info->exc_traceback;
+    exc_info->exc_type = type;
+    exc_info->exc_value = value;
+    exc_info->exc_traceback = tb;
+    #else
+    tmp_type = tstate->exc_type;
+    tmp_value = tstate->exc_value;
+    tmp_tb = tstate->exc_traceback;
+    tstate->exc_type = type;
+    tstate->exc_value = value;
+    tstate->exc_traceback = tb;
+    #endif
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
+  #endif
+}
+#endif
+
+/* GetException */
+#if CYTHON_FAST_THREAD_STATE
+static int __Pyx__GetException(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb)
+#else
+static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb)
+#endif
+{
+    PyObject *local_type = NULL, *local_value, *local_tb = NULL;
+#if CYTHON_FAST_THREAD_STATE
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+  #if PY_VERSION_HEX >= 0x030C0000
+    local_value = tstate->current_exception;
+    tstate->current_exception = 0;
+  #else
+    local_type = tstate->curexc_type;
+    local_value = tstate->curexc_value;
+    local_tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+  #endif
+#elif __PYX_LIMITED_VERSION_HEX > 0x030C0000
+    local_value = PyErr_GetRaisedException();
+#else
+    PyErr_Fetch(&local_type, &local_value, &local_tb);
+#endif
+#if __PYX_LIMITED_VERSION_HEX > 0x030C0000
+    if (likely(local_value)) {
+        local_type = (PyObject*) Py_TYPE(local_value);
+        Py_INCREF(local_type);
+        local_tb = PyException_GetTraceback(local_value);
+    }
+#else
+    PyErr_NormalizeException(&local_type, &local_value, &local_tb);
+#if CYTHON_FAST_THREAD_STATE
+    if (unlikely(tstate->curexc_type))
+#else
+    if (unlikely(PyErr_Occurred()))
+#endif
+        goto bad;
+    if (local_tb) {
+        if (unlikely(PyException_SetTraceback(local_value, local_tb) < 0))
+            goto bad;
+    }
+#endif // __PYX_LIMITED_VERSION_HEX > 0x030C0000
+    Py_XINCREF(local_tb);
+    Py_XINCREF(local_type);
+    Py_XINCREF(local_value);
+    *type = local_type;
+    *value = local_value;
+    *tb = local_tb;
+#if CYTHON_FAST_THREAD_STATE
+    #if CYTHON_USE_EXC_INFO_STACK
+    {
+        _PyErr_StackItem *exc_info = tstate->exc_info;
+      #if PY_VERSION_HEX >= 0x030B00a4
+        tmp_value = exc_info->exc_value;
+        exc_info->exc_value = local_value;
+        tmp_type = NULL;
+        tmp_tb = NULL;
+        Py_XDECREF(local_type);
+        Py_XDECREF(local_tb);
+      #else
+        tmp_type = exc_info->exc_type;
+        tmp_value = exc_info->exc_value;
+        tmp_tb = exc_info->exc_traceback;
+        exc_info->exc_type = local_type;
+        exc_info->exc_value = local_value;
+        exc_info->exc_traceback = local_tb;
+      #endif
+    }
+    #else
+    tmp_type = tstate->exc_type;
+    tmp_value = tstate->exc_value;
+    tmp_tb = tstate->exc_traceback;
+    tstate->exc_type = local_type;
+    tstate->exc_value = local_value;
+    tstate->exc_traceback = local_tb;
+    #endif
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
+#elif __PYX_LIMITED_VERSION_HEX >= 0x030b0000
+    PyErr_SetHandledException(local_value);
+    Py_XDECREF(local_value);
+    Py_XDECREF(local_type);
+    Py_XDECREF(local_tb);
+#else
+    PyErr_SetExcInfo(local_type, local_value, local_tb);
+#endif
+    return 0;
+#if __PYX_LIMITED_VERSION_HEX <= 0x030C0000
+bad:
+    *type = 0;
+    *value = 0;
+    *tb = 0;
+    Py_XDECREF(local_type);
+    Py_XDECREF(local_value);
+    Py_XDECREF(local_tb);
+    return -1;
+#endif
 }
 
 /* LimitedApiGetTypeDict */

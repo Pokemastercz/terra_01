@@ -3,6 +3,8 @@ import functions as fun
 import pygame, sys, time ,math, os, cyfunctions
 #import saves.world_0.strings.string as string
 import saves.world_0.strings.string as stringfile
+with open("saves/world_0/strings/spawn.wstr", "r") as f:
+    strings = f.read()
 
 folder_texture_blocks = "resources/textures/blocks"
 string_filepath = "saves/world_0/strings/string.py"
@@ -16,8 +18,6 @@ win = pygame.display.set_mode((ww,wh))
 world_width = 32
 world_height = 32
 
-#LAND OF THE FREE MIND
-
 def load_textures(folder,scale): #Loads the textures from the specified folder and scales them
     for filename in os.listdir(folder):
         if filename.endswith(".png")or filename.endswith(".jpg"):
@@ -27,13 +27,13 @@ def load_textures(folder,scale): #Loads the textures from the specified folder a
             textures_blocks[texture_name] = pygame.transform.scale(texture, ((tilesize*scale),(tilesize*scale)))
 
 
-def projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position and scale
+def projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale
     xposp=((ww/2)+(xpos*scale))
     yposp=((wh/2)+(ypos*scale))
     win.blit(textures_blocks[texture],(xposp,yposp))
 
 def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string
-    string = stringfile.string
+    string = strings
     for curry in range(world_height):
         for currx in range(world_width):
             tileposx=((0-plx)+(currx*tilesize))

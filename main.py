@@ -34,8 +34,8 @@ while True:
     msx,msy=pygame.mouse.get_pos()
     tileindx,tileindy=cyfunctions.tileind(plx,ply,msx,msy,scale)
     win.blit(pygame.transform.scale(pygame.image.load("resources/textures/entities/cursor.png").convert_alpha(), (5*scale,5*scale)), (msx,msy)) #Projects the cursor texture to the screen
-    plx-=(1-(msx/(ww/2)))/5
-    ply-=(1-(msy/(wh/2)))/5
+    plx-=(1-(msx/(ww/2)))/4
+    ply-=(1-(msy/(wh/2)))/4
     print(clock.get_fps())
     pygame.display.update()
     clock.tick(60)
