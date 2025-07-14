@@ -1,6 +1,6 @@
 # game_logic.pyx
 import functions as fun
-import pygame, sys, time ,math, os, cyfunctions
+import pygame, sys, time ,math,random, os, cyfunctions
 #import saves.world_0.strings.string as string
 import saves.world_0.strings.string as stringfile
 with open("saves/world_0/strings/spawn.wstr", "r") as f:
@@ -14,10 +14,11 @@ tilesize = 8
 ww, wh = 1854, 1010
 
 win = pygame.display.set_mode((ww,wh))
-
-world_width = 32
-world_height = 32
-
+chunkcountx = 10
+chunkcounty = 10
+chunksize=16
+world_width = chunksize*chunkcountx
+world_height = chunksize*chunkcounty
 def load_textures(folder,scale): #Loads the textures from the specified folder and scales them
     for filename in os.listdir(folder):
         if filename.endswith(".png")or filename.endswith(".jpg"):
@@ -32,8 +33,7 @@ def projector(texture, xpos,ypos,scale): #Projects the texture to the screen bas
     yposp=((wh/2)+(ypos*scale))
     win.blit(textures_blocks[texture],(xposp,yposp))
 
-def terrainproject(plx,ply,scale): #Projects the terrain based on the player position and the world string
-    string = strings
+def terrainproject(plx,ply,scale,string): #Projects the terrain based on the player position and the world string
     for curry in range(world_height):
         for currx in range(world_width):
             tileposx=((0-plx)+(currx*tilesize))
@@ -65,3 +65,45 @@ def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
     print(tilex,tiley)
     projector("tileindicator",indtx,indty,scale)
     return(tilex,tiley)
+
+def lerp(a,b,t):
+    return a+(b-a)*t
+
+def worldgen(world_width,world_height,treshold):
+    string=""
+    dirs={}
+
+    # Generate direction vectors per chunk
+    for i in range((chunkcountx+1)*(chunkcounty+1)):
+        angle=random.uniform(0,2*math.pi)
+        dirs[i]=(math.cos(angle),math.sin(angle))
+
+    for curry in range(world_height):
+        for currx in range(world_width):
+            chunkx=currx//chunksize
+            chunky=curry//chunksize
+            localx=(currx%chunksize)/chunksize
+            localy=(curry%chunksize)/chunksize
+            a=dirs[chunkx+chunky*chunkcountx]
+            b=dirs[chunkx+1+chunky*chunkcountx]
+            c=dirs[chunkx+(chunky+1)*chunkcountx]
+            d=dirs[chunkx+1+(chunky+1)*chunkcountx]
+            def dot(dx,dy,x,y):
+                return dx*x+dy*y
+            coorda=dot(*a,localx,localy)
+            coordb=dot(*b,localx-1,localy)
+            coordc=dot(*c,localx,localy-1)
+            coordd=dot(*d,localx-1,localy-1)
+            def fade(t):return t*t*t*(t*(t*6-15)+10)
+            tx,ty=fade(localx),fade(localy)
+            lerp1=lerp(coorda,coordb,tx)
+            lerp2=lerp(coordc,coordd,tx)
+            fvalue=lerp(lerp1,lerp2,ty)
+            if fvalue>=0:
+                if fvalue>=0.1:
+                    string+="DDACA"
+                else:
+                    string+="CEAEA"
+            else:
+                string+="BAAAA"
+    return string
