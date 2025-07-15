@@ -70,7 +70,7 @@ def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
 def lerp(a,b,t):
     return a+(b-a)*t
 
-def worldgen(world_width,world_height,chunksize):
+def worldgen(world_width,world_height,chunksize,rnd):
     chunkcountx=int(world_width/chunksize)
     chunkcounty=int(world_height/chunksize)
     string=""
@@ -103,7 +103,7 @@ def worldgen(world_width,world_height,chunksize):
             lerp1=lerp(coorda,coordb,tx)
             lerp2=lerp(coordc,coordd,tx)
             fvalue=lerp(lerp1,lerp2,ty)
-            heightmap[(currx,curry)]=fvalue
+            heightmap[(currx,curry)]=(fvalue+(rnd*random.uniform(-1,1)))
             #if fvalue>=0:
             #    if fvalue>=0.1:
             #        string+="DDACA"
@@ -148,15 +148,24 @@ def worldgens(world_width,world_height,chunksize,heightmap,hmod):
             heightmap[(currx,curry)]+=(fvalue*hmod)
     return heightmap
 
-def wstringing(heightmap,world_width,world_height):
+def wstringing(heightmap,tempmap,world_width,world_height):
     string=""
     for curry in range(world_height-5):
         for currx in range(world_width):
-            if heightmap[(currx,curry)]>=0:
-                if heightmap[(currx,curry)]>=0.1:
-                    string+="DDACA"
+            if tempmap[(currx,curry)]>=-0.1:
+                if heightmap[(currx,curry)]>=0:
+                    if heightmap[(currx,curry)]>=0.1:
+                        string+="DDACA"
+                    else:
+                        string+="CEAEA"
                 else:
-                    string+="CEAEA"
+                    string+="BAAAA"
             else:
-                string+="BAAAA"
+                if heightmap[(currx,curry)]>=(-0.1+(0.05*random.uniform(-1,1))):
+                    if heightmap[(currx,curry)]>=0.1:
+                        string+="EDAKA"
+                    else:
+                        string+="EAALA"
+                else:
+                    string+="BAAAA"
     return(string)

@@ -15,9 +15,10 @@ plx, ply = 60,60
 
 pygame.mouse.set_visible(False)
 
-heightmap=cyfunctions.worldgen(cyfunctions.world_width,cyfunctions.world_height+10,16)
-heightmap=cyfunctions.worldgens(cyfunctions.world_width,cyfunctions.world_height+10,8,heightmap,0.2)
-stringwg=cyfunctions.wstringing(heightmap,cyfunctions.world_width,cyfunctions.world_height+10)
+heightmap=cyfunctions.worldgen(cyfunctions.world_width,cyfunctions.world_height+10,cyfunctions.chunksize,0)
+heightmap=cyfunctions.worldgens(cyfunctions.world_width,cyfunctions.world_height+10,(cyfunctions.chunksize/2),heightmap,0.1)
+tempmap=cyfunctions.worldgen(cyfunctions.world_width,cyfunctions.world_height+10,cyfunctions.world_height,0.03)
+stringwg=cyfunctions.wstringing(heightmap,tempmap,cyfunctions.world_width,cyfunctions.world_height+10)
 
 while True:
 
