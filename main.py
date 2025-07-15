@@ -15,7 +15,9 @@ plx, ply = 60,60
 
 pygame.mouse.set_visible(False)
 
-stringwg=cyfunctions.worldgen(cyfunctions.world_width,cyfunctions.world_height+5,0.1)#Generates the world string based on the world width and height
+heightmap=cyfunctions.worldgen(cyfunctions.world_width,cyfunctions.world_height+10,16)
+heightmap=cyfunctions.worldgens(cyfunctions.world_width,cyfunctions.world_height+10,8,heightmap,0.2)
+stringwg=cyfunctions.wstringing(heightmap,cyfunctions.world_width,cyfunctions.world_height+10)
 
 while True:
 

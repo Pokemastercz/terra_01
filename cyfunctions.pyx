@@ -14,8 +14,8 @@ tilesize = 8
 ww, wh = 1854, 1010
 
 win = pygame.display.set_mode((ww,wh))
-chunkcountx = 10
-chunkcounty = 10
+chunkcountx = 5
+chunkcounty = 5
 chunksize=16
 world_width = chunksize*chunkcountx
 world_height = chunksize*chunkcounty
@@ -50,6 +50,7 @@ def tilestringcalculate(currx,curry,string): #Calculates the string for the tile
     tilestring=string[((currtile*5)+1)]
     tilestring+=string[((currtile*5)+3)]
     tilestring+=string[((currtile*5)+4)]
+    print(currx,curry)
     for currneighbour in indices:
         if string[currneighbour+3]==string[(currtile*5)+3]:
             tilestring+="a"
@@ -69,7 +70,52 @@ def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
 def lerp(a,b,t):
     return a+(b-a)*t
 
-def worldgen(world_width,world_height,treshold):
+def worldgen(world_width,world_height,chunksize):
+    chunkcountx=int(world_width/chunksize)
+    chunkcounty=int(world_height/chunksize)
+    string=""
+    dirs={}
+    heightmap={}
+
+    # Generate direction vectors per chunk
+    for i in range((chunkcountx+1)*(chunkcounty+1)):
+        angle=random.uniform(0,2*math.pi)
+        dirs[i]=(math.cos(angle),math.sin(angle))
+
+    for curry in range(world_height):
+        for currx in range(world_width):
+            chunkx=currx//chunksize
+            chunky=curry//chunksize
+            localx=(currx%chunksize)/chunksize
+            localy=(curry%chunksize)/chunksize
+            a=dirs[chunkx+(chunky*chunkcountx)]
+            b=dirs[chunkx+1+(chunky*chunkcountx)]
+            c=dirs[chunkx+((chunky+1)*chunkcountx)]
+            d=dirs[chunkx+1+((chunky+1)*chunkcountx)]
+            def dot(dx,dy,x,y):
+                return dx*x+dy*y
+            coorda=dot(*a,localx,localy)
+            coordb=dot(*b,localx-1,localy)
+            coordc=dot(*c,localx,localy-1)
+            coordd=dot(*d,localx-1,localy-1)
+            def fade(t):return t*t*t*(t*(t*6-15)+10)
+            tx,ty=fade(localx),fade(localy)
+            lerp1=lerp(coorda,coordb,tx)
+            lerp2=lerp(coordc,coordd,tx)
+            fvalue=lerp(lerp1,lerp2,ty)
+            heightmap[(currx,curry)]=fvalue
+            #if fvalue>=0:
+            #    if fvalue>=0.1:
+            #        string+="DDACA"
+            #    else:
+            #        string+="CEAEA"
+            #else:
+            #    string+="BAAAA"
+    return heightmap
+
+def worldgens(world_width,world_height,chunksize,heightmap,hmod):
+    chunkcountx=int(world_width/chunksize)
+    chunkcounty=int(world_height/chunksize)
     string=""
     dirs={}
 
@@ -84,10 +130,10 @@ def worldgen(world_width,world_height,treshold):
             chunky=curry//chunksize
             localx=(currx%chunksize)/chunksize
             localy=(curry%chunksize)/chunksize
-            a=dirs[chunkx+chunky*chunkcountx]
-            b=dirs[chunkx+1+chunky*chunkcountx]
-            c=dirs[chunkx+(chunky+1)*chunkcountx]
-            d=dirs[chunkx+1+(chunky+1)*chunkcountx]
+            a=dirs[chunkx+(chunky*chunkcountx)]
+            b=dirs[chunkx+1+(chunky*chunkcountx)]
+            c=dirs[chunkx+((chunky+1)*chunkcountx)]
+            d=dirs[chunkx+1+((chunky+1)*chunkcountx)]
             def dot(dx,dy,x,y):
                 return dx*x+dy*y
             coorda=dot(*a,localx,localy)
@@ -99,11 +145,18 @@ def worldgen(world_width,world_height,treshold):
             lerp1=lerp(coorda,coordb,tx)
             lerp2=lerp(coordc,coordd,tx)
             fvalue=lerp(lerp1,lerp2,ty)
-            if fvalue>=0:
-                if fvalue>=0.1:
+            heightmap[(currx,curry)]+=(fvalue*hmod)
+    return heightmap
+
+def wstringing(heightmap,world_width,world_height):
+    string=""
+    for curry in range(world_height-5):
+        for currx in range(world_width):
+            if heightmap[(currx,curry)]>=0:
+                if heightmap[(currx,curry)]>=0.1:
                     string+="DDACA"
                 else:
                     string+="CEAEA"
             else:
                 string+="BAAAA"
-    return string
+    return(string)
