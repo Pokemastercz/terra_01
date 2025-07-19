@@ -1,24 +1,23 @@
-import pygame,sys,time,math,os,cyfunctions,random
+import pygame,sys,time,math,os,cyfunctions,random,worldgen
 import functions as fun
 
 # python cysetup.py build_ext --inplace   (builds the cyfunctions file)
+# python cysetupworldgen.py build_ext --inplace   (builds the worldgen file)
 
 ww,wh=1854,1010
 pygame.init
 win=pygame.display.set_mode((ww,wh))
 pygame.display.set_caption("Terra")
 clock=pygame.time.Clock()
-scale=1
+scale=10
 cyfunctions.load_textures(cyfunctions.folder_texture_blocks,scale)
 
 plx, ply = 60,60
 
 pygame.mouse.set_visible(False)
 
-heightmap=cyfunctions.worldgen(cyfunctions.world_width,cyfunctions.world_height+10,cyfunctions.chunksize,0)
-heightmap=cyfunctions.worldgens(cyfunctions.world_width,cyfunctions.world_height+10,(cyfunctions.chunksize/2),heightmap,0.1)
-tempmap=cyfunctions.worldgen(cyfunctions.world_width,cyfunctions.world_height+10,cyfunctions.world_height,0.03)
-stringwg=cyfunctions.wstringing(heightmap,tempmap,cyfunctions.world_width,cyfunctions.world_height+10)
+
+stringwg=worldgen.generate_world(32,32,16)
 
 while True:
 
