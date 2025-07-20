@@ -41,4 +41,4 @@ while True:
     ply-=(1-(msy/(wh/2)))/4
     print(clock.get_fps())
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(600)
