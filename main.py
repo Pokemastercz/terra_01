@@ -1,8 +1,8 @@
 import pygame,sys,time,math,os,cyfunctions,random,worldgen
 import functions as fun
 
-# python cysetup.py build_ext --inplace   (builds the cyfunctions file)
-# python cysetupworldgen.py build_ext --inplace   (builds the worldgen file)
+# python3 cysetup.py build_ext --inplace   (builds the cyfunctions file)
+# python3 cysetupworldgen.py build_ext --inplace   (builds the worldgen file)
 
 ww,wh=1854,1010
 pygame.init
@@ -28,6 +28,7 @@ while True:
     win.fill((0,127,127))
     blocktexturedims=(scale*cyfunctions.tilesize)
     cyfunctions.terrainproject(plx,ply,scale,stringwg)
+    print(cyfunctions.get_x())
     
 
 

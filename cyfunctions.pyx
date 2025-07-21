@@ -1,6 +1,6 @@
 # game_logic.pyx
 import functions as fun
-import pygame, sys, time ,math,random, os, cyfunctions
+import pygame, sys, time ,math,random, os
 #import saves.world_0.strings.string as string
 import saves.world_0.strings.string as stringfile
 with open("saves/world_0/strings/spawn.wstr", "r") as f:
@@ -11,14 +11,21 @@ string_filepath = "saves/world_0/strings/string.py"
 textures_blocks = {}
 
 tilesize = 8
-ww, wh = 1854, 1010
+cdef int ww=1854
+cdef int wh=1010
+
+cdef int x = 5
+
+cpdef int get_x():
+    return x
+
 
 win = pygame.display.set_mode((ww,wh))
-chunkcountx = 2
-chunkcounty = 2
-chunksize=16
-world_width = chunksize*chunkcountx
-world_height = chunksize*chunkcounty
+cdef int chunkcountx = 2
+cdef int chunkcounty = 2
+cdef int chunksize=16
+cdef int world_width = chunksize*chunkcountx
+cdef int world_height = chunksize*chunkcounty
 def load_textures(folder,scale): #Loads the textures from the specified folder and scales them
     for filename in os.listdir(folder):
         if filename.endswith(".png")or filename.endswith(".jpg"):
@@ -29,12 +36,12 @@ def load_textures(folder,scale): #Loads the textures from the specified folder a
     textures_blocks["tileindicator"] = pygame.transform.scale(pygame.image.load("resources/textures/entities/tileindicator.png").convert_alpha(), ((tilesize*scale),(tilesize*scale)))
 
 
-def projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale
-    xposp=((ww/2)+(xpos*scale))
-    yposp=((wh/2)+(ypos*scale))
+cdef projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale
+    cdef int xposp=((ww/2)+(xpos*scale))
+    cdef int yposp=((wh/2)+(ypos*scale))
     win.blit(textures_blocks[texture],(xposp,yposp))
 
-def terrainproject(plx,ply,scale,string): #Projects the terrain based on the player position and the world string
+cpdef terrainproject(plx,ply,scale,string): #Projects the terrain based on the player position and the world string
     for curry in range(world_height):
         for currx in range(world_width):
             tileposx=((0-plx)+(currx*tilesize))
@@ -46,16 +53,33 @@ def terrainproject(plx,ply,scale,string): #Projects the terrain based on the pla
                 else:
                     projector("default",tileposx,tileposy,scale)
 
-def tilestringcalculate(currx,curry,string): #Calculates the string for the tile based on the worldstring and its neighbours
-    currtile=((world_width*(curry+1))+currx)
-    indices=[((currtile-1)*5),((currtile-world_width)*5),((currtile+1)*5),((currtile+world_width)*5)]
-    tilestring=string[((currtile*5)+1)]+string[((currtile*5)+3)]+string[((currtile*5)+4)]
-    for currneighbour in indices:
-        if string[currneighbour+3]==string[(currtile*5)+3]:
-            tilestring+="a"
+cdef str tilestringcalculate(int currx,int curry,str string):
+    cdef int currtile=(world_width*(curry+1))+currx
+
+    cdef int idx=currtile*5
+    cdef char underlying=string[idx+1]
+    cdef char tile=string[idx+3]
+    cdef char tileexact=string[idx+4]
+
+    cdef char result[8]
+    result[0]=underlying
+    result[1]=tile
+    result[2]=tileexact
+
+    cdef int neighbor_indices[4]
+    neighbor_indices[0]=(currtile-1)*5
+    neighbor_indices[1]=(currtile-world_width)*5
+    neighbor_indices[2]=(currtile+1)*5
+    neighbor_indices[3]=(currtile+world_width)*5
+
+    cdef int i
+    for i in range(4):
+        if string[neighbor_indices[i]+3]==tile:
+            result[3+i]='a'
         else:
-            tilestring+="b"
-    return(tilestring)
+            result[3+i]='b'
+
+    return result.decode('ascii')
 
 def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
     indtx=((0-plx)+((math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))*tilesize))

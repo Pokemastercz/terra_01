@@ -2,5 +2,6 @@ from setuptools import setup
 from Cython.Build import cythonize
 
 setup(
-    ext_modules=cythonize("cyfunctions.pyx")
+    name="cyfunctions",
+    ext_modules=cythonize("cyfunctions.pyx", compiler_directives={"language_level": "3"}),
 )
