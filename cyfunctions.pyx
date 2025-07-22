@@ -53,6 +53,14 @@ cpdef terrainproject(plx,ply,scale,string): #Projects the terrain based on the p
                 else:
                     projector("default",tileposx,tileposy,scale)
 
+cdef int wang_hash(int seed):
+    seed=(seed^61)^(seed>>16)
+    seed=seed+(seed<<3)
+    seed=seed^(seed>>4)
+    seed=seed*0x27d4eb2d
+    seed=seed^(seed>>15)
+    return seed & 0x7fffffff
+
 cdef str tilestringcalculate(int currx,int curry,str string):
     cdef int currtile=(world_width*(curry+1))+currx
 
@@ -62,9 +70,13 @@ cdef str tilestringcalculate(int currx,int curry,str string):
     cdef char tileexact=string[idx+4]
 
     cdef char result[8]
+    result[7]=0
     result[0]=underlying
     result[1]=tile
     result[2]=tileexact
+
+    cdef int hashval = wang_hash(currx * 928371 + curry * 425897)
+    result[3] = <char>(48 + (hashval % 4))
 
     cdef int neighbor_indices[4]
     neighbor_indices[0]=(currtile-1)*5
@@ -75,10 +87,9 @@ cdef str tilestringcalculate(int currx,int curry,str string):
     cdef int i
     for i in range(4):
         if string[neighbor_indices[i]+3]==tile:
-            result[3+i]='a'
+            result[4+i]='a'
         else:
-            result[3+i]='b'
-
+            result[4+i]='b'
     return result.decode('ascii')
 
 def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor

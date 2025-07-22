@@ -9,7 +9,7 @@ pygame.init
 win=pygame.display.set_mode((ww,wh))
 pygame.display.set_caption("Terra")
 clock=pygame.time.Clock()
-scale=10
+scale=3
 cyfunctions.load_textures(cyfunctions.folder_texture_blocks,scale)
 
 plx, ply = 60,60
@@ -28,7 +28,6 @@ while True:
     win.fill((0,127,127))
     blocktexturedims=(scale*cyfunctions.tilesize)
     cyfunctions.terrainproject(plx,ply,scale,stringwg)
-    print(cyfunctions.get_x())
     
 
 
