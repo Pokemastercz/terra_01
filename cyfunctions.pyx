@@ -19,6 +19,7 @@ cdef int x = 5
 cpdef int get_x():
     return x
 
+cdef set wall = {ord("A"), ord("L")}
 
 win = pygame.display.set_mode((ww,wh))
 cdef int chunkcountx = 2
@@ -100,3 +101,21 @@ def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
     #print(tilex,tiley)
     projector("tileindicator",indtx,indty,scale)
     return(tilex,tiley)
+
+cpdef collisions(currx,curry,velx,vely,string): #Checks for collisions with the terrain
+    cdef int currtile=(world_width*((math.floor((curry)/tilesize))+1))+(math.floor((currx)/tilesize))
+    cdef int intdtile=(world_width*((math.floor((curry+vely)/tilesize))))+(math.floor((currx+velx)/tilesize))
+    cdef int intdtilex=(world_width*((math.floor((curry)/tilesize))))+(math.floor((currx+velx)/tilesize))
+    cdef int intdtiley=(world_width*((math.floor((curry+vely)/tilesize))))+(math.floor((currx)/tilesize))
+    cdef int tilex=(math.floor((currx+velx)/8))
+    cdef int tiley=(math.floor((curry+vely)/8))
+    if ord(string[((intdtile*5)+3)]) in wall or tilex<0 or tilex>world_width or tiley<0 or tiley>world_height:
+        if not ord(string[((intdtilex*5)+3)]) in wall and not tilex<0 and not tilex>world_width:
+            currx+=velx
+        if not ord(string[((intdtiley*5)+3)]) in wall and not tiley<0 and not tiley>world_height:
+            curry+=vely
+    else:
+        currx+=velx
+        curry+=vely
+    
+    return(currx,curry)
