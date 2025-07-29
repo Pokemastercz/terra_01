@@ -4,12 +4,12 @@ import functions as fun
 # python3 cysetup.py build_ext --inplace   (builds the cyfunctions file)
 # python3 cysetupworldgen.py build_ext --inplace   (builds the worldgen file)
 
-ww,wh=1854,1010
 pygame.init
-win=pygame.display.set_mode((ww,wh))
+win=pygame.display.set_mode((300,200),pygame.SCALED)
+ww,wh=win.get_size()
 pygame.display.set_caption("Terra")
 clock=pygame.time.Clock()
-scale=10
+scale=1
 cyfunctions.load_textures(cyfunctions.folder_texture_blocks,scale)
 
 plx, ply = 60,60

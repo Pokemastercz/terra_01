@@ -11,15 +11,15 @@ string_filepath = "saves/world_0/strings/string.py"
 textures_blocks = {}
 
 tilesize = 8
-cdef int ww=1854
-cdef int wh=1010
+cdef int ww=300
+cdef int wh=200
 
 cdef int x = 5
 
 cpdef int get_x():
     return x
 
-cdef set wall = {ord("A"), ord("L")}
+cdef set wall = {ord("A")}
 
 win = pygame.display.set_mode((ww,wh))
 cdef int chunkcountx = 2
@@ -94,10 +94,10 @@ cdef str tilestringcalculate(int currx,int curry,str string):
     return result.decode('ascii')
 
 def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
-    indtx=((0-plx)+((math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))*tilesize))
-    indty=((0-ply)+((math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))*tilesize))
-    tilex=(math.floor(((plx)-(((ww/2)-msx)/scale))/(tilesize)))
-    tiley=(math.floor(((ply)-(((wh/2)-msy)/scale))/(tilesize)))
+    indtx=((0-plx)+(((((plx)-(((ww/2)-msx)/scale))//(tilesize)))*tilesize))
+    indty=((0-ply)+(((((ply)-(((wh/2)-msy)/scale))//(tilesize)))*tilesize))
+    tilex=(math.floor(((plx)-(((ww/2)-msx)/scale))//(tilesize)))
+    tiley=(math.floor(((ply)-(((wh/2)-msy)/scale))//(tilesize)))
     #print(tilex,tiley)
     projector("tileindicator",indtx,indty,scale)
     return(tilex,tiley)
