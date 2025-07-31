@@ -20,6 +20,7 @@ cpdef int get_x():
     return x
 
 cdef set wall = {ord("A")}
+cdef dict _tilestring_cache = {}
 
 win = pygame.display.set_mode((ww,wh))
 cdef int chunkcountx = 2
@@ -63,6 +64,7 @@ cdef int wang_hash(int seed):
     return seed & 0x7fffffff
 
 cdef str tilestringcalculate(int currx,int curry,str string):
+    cdef bytes bthing
     cdef int currtile=(world_width*(curry+1))+currx
 
     cdef int idx=currtile*5
@@ -91,7 +93,12 @@ cdef str tilestringcalculate(int currx,int curry,str string):
             result[4+i]='a'
         else:
             result[4+i]='b'
-    return result.decode('ascii')
+    bthing = result[:8]  # bytes
+    if bthing in _tilestring_cache:
+        return _tilestring_cache[bthing]
+    s = bthing.decode("ascii")
+    _tilestring_cache[bthing] = s
+    return s
 
 def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
     indtx=((0-plx)+(((((plx)-(((ww/2)-msx)/scale))//(tilesize)))*tilesize))
