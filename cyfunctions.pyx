@@ -21,8 +21,6 @@ cpdef int get_x():
 
 cdef set wall = {ord("A")}
 cdef dict _tilestring_cache = {}
-
-win = pygame.display.set_mode((ww,wh))
 cdef int chunkcountx = 2
 cdef int chunkcounty = 2
 cdef int chunksize=16
@@ -38,12 +36,12 @@ def load_textures(folder,scale): #Loads the textures from the specified folder a
     textures_blocks["tileindicator"] = pygame.transform.scale(pygame.image.load("resources/textures/entities/tileindicator.png").convert_alpha(), ((tilesize*scale),(tilesize*scale)))
 
 
-cdef projector(texture, xpos,ypos,scale): #Projects the texture to the screen based on the position on the map and scale
+cdef projector(texture, xpos,ypos,scale,surf,ww,wh): #Projects the texture to the screen based on the position on the map and scale
     cdef int xposp=((ww/2)+(xpos*scale))
-    cdef int yposp=((wh/2)+(ypos*scale))
-    win.blit(textures_blocks[texture],(xposp,yposp))
+    cdef int yposp=((wh/2)+(ypos*(wh//200)))
+    surf.blit(textures_blocks[texture],(xposp,yposp))
 
-cpdef terrainproject(plx,ply,scale,string): #Projects the terrain based on the player position and the world string
+cpdef terrainproject(plx,ply,scale,string,surf,ww,wh): #Projects the terrain based on the player position and the world string
     for curry in range(world_height):
         for currx in range(world_width):
             tileposx=((0-plx)+(currx*tilesize))
@@ -51,9 +49,9 @@ cpdef terrainproject(plx,ply,scale,string): #Projects the terrain based on the p
             if not ((ww/2)+(tileposx*scale)) < ((tilesize*scale)*-1) and not ((wh/2)+(tileposy*scale)) < ((tilesize*scale)*-1) and not((ww/2)+(tileposx*scale)) > ww and not((wh/2)+(tileposy*scale)) > wh:
                 tilestring = tilestringcalculate(currx,curry,string)
                 if tilestring in textures_blocks:
-                    projector(tilestring,tileposx,tileposy,scale)
+                    projector(tilestring,tileposx,tileposy,scale,surf,ww,wh)
                 else:
-                    projector("default",tileposx,tileposy,scale)
+                    projector("default",tileposx,tileposy,scale,surf,ww,wh)
 
 cdef int wang_hash(int seed):
     seed=(seed^61)^(seed>>16)
@@ -100,13 +98,13 @@ cdef str tilestringcalculate(int currx,int curry,str string):
     _tilestring_cache[bthing] = s
     return s
 
-def tileind(plx,ply,msx,msy,scale): #Detects the tile under the mouse cursor
+def tileind(plx,ply,msx,msy,scale,surf,ww,wh): #Detects the tile under the mouse cursor
     indtx=((0-plx)+(((((plx)-(((ww/2)-msx)/scale))//(tilesize)))*tilesize))
     indty=((0-ply)+(((((ply)-(((wh/2)-msy)/scale))//(tilesize)))*tilesize))
     tilex=(math.floor(((plx)-(((ww/2)-msx)/scale))//(tilesize)))
     tiley=(math.floor(((ply)-(((wh/2)-msy)/scale))//(tilesize)))
     #print(tilex,tiley)
-    projector("tileindicator",indtx,indty,scale)
+    projector("tileindicator",indtx,indty,scale,surf,ww,wh)
     return(tilex,tiley)
 
 cpdef collisions(currx,curry,velx,vely,string): #Checks for collisions with the terrain
